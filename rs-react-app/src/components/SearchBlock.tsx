@@ -8,7 +8,7 @@ interface State {
 }
 
 interface SearchingBlockProps {
-  // если нет пропсов — можно оставить пустым
+
 }
 
 
@@ -16,7 +16,7 @@ export class SearchingBlock extends Component <{}, State> {
     constructor(props: SearchingBlockProps) {
         super(props);
         this.state = {
-            query: '',
+            query: localStorage.getItem("words") || "",
             result: null,
             isLoading: false
         }
@@ -29,6 +29,8 @@ export class SearchingBlock extends Component <{}, State> {
         this.setState ({
             isLoading: true
         })
+        localStorage.removeItem("words");
+        localStorage.setItem("words", this.state.query);
 
           getData()
     .then(data => {
@@ -42,7 +44,10 @@ export class SearchingBlock extends Component <{}, State> {
     render() {
         return (
             <form onSubmit={this.handleSubmit}>
-                <input placeholder="Please, enter...">
+                <input 
+                placeholder="Please, enter..."
+                value={this.state.query}
+                onChange={this.handleChange}>
                 </input>
                 <button type="submit">
                     Search!
