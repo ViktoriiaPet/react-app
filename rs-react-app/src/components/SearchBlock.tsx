@@ -7,12 +7,25 @@ interface State {
   isLoading: boolean;
 }
 
-interface SearchingBlockProps {
-
+interface PokemonData {
+  name: string;
+  id: number;
+  weight: number;
+  sprites: {
+    front_default: string;
+  };
 }
 
+export interface SearchingBlockProps {
+    onResult: (data: PokemonData) => void;
+}
 
-export class SearchingBlock extends Component <{}, State> {
+interface State {
+  query: string;
+  isLoading: boolean;
+}
+
+export class SearchingBlock extends Component <SearchingBlockProps, State> {
     constructor(props: SearchingBlockProps) {
         super(props);
         this.state = {
@@ -32,14 +45,15 @@ export class SearchingBlock extends Component <{}, State> {
         localStorage.removeItem("words");
         localStorage.setItem("words", this.state.query);
 
-          getData()
-    .then(data => {
-      this.setState({ result: data, isLoading: false });
-    })
-    .catch(error => {
-      console.error(error);
-      this.setState({ isLoading: false });
-    });
+        getData()
+        .then((data) => {
+        this.props.onResult(data);
+        this.setState({ isLoading: false });
+      })
+        .catch((error) => {
+        console.error(error);
+        this.setState({ isLoading: false });
+      });
     }
     render() {
         return (
