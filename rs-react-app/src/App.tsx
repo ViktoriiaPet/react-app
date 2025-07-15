@@ -1,9 +1,9 @@
-import { Component} from "react";
+import { Component } from 'react';
 
-import SearchPage from './pages/Searching.js'
+import SearchPage from './pages/Searching.js';
 
 export default class App extends Component {
-    render() {
-        return <SearchPage />
-    }
+  render() {
+    return <SearchPage />;
+  }
 }

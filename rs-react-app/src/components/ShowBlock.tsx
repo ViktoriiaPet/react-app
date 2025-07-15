@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { Component } from 'react';
 
 interface PokemonData {
   name: string;
@@ -11,14 +11,14 @@ interface PokemonData {
 interface ShowScreenProps {
   result: PokemonData | null;
 }
-export class ShowScreen extends Component<ShowScreenProps>{
-    render() {
-        const { result } = this.props;
-        return (
-            <div className="granPantalla">
-                <h2>Your results</h2>
-                <div className="showPantalla">
-                    {result ? (
+export class ShowScreen extends Component<ShowScreenProps> {
+  render() {
+    const { result } = this.props;
+    return (
+      <div className="granPantalla">
+        <h2>Your results</h2>
+        <div className="showPantalla">
+          {result ? (
             <div>
               <h3>{result.name}</h3>
               <img src={result.sprites.front_default} alt={result.name} />
@@ -28,8 +28,8 @@ export class ShowScreen extends Component<ShowScreenProps>{
           ) : (
             <p>Will show here</p>
           )}
-                </div>
-            </div>
-        )
-    }
+        </div>
+      </div>
+    );
+  }
 }
