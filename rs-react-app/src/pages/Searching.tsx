@@ -13,8 +13,8 @@ interface PokemonData {
 interface State {
   result: PokemonData | null;
 }
-export default class SearchPage extends Component<{}, State> {
-  constructor(props: {}) {
+export default class SearchPage extends Component<object, State> {
+  constructor(props: object) {
     super(props);
     this.state = { result: null };
   }
@@ -24,10 +24,10 @@ export default class SearchPage extends Component<{}, State> {
   render() {
     return (
       <>
-        <h1>Welcome to the Main 'Pokemon' page!</h1>
+        <h1>Welcome to the Main &apos;Pokemon&apos; page!</h1>
         <h3>
-          You can try to enter names of pokemons (for exapmle "ditto", "raichu",
-          "pikachu")
+          You can try to enter names of pokemons (for exapmle &quot;ditto&quot;,
+          &quot;raichu&quot;, &quot;pikachu&quot;)
         </h3>
         <SearchingBlock onResult={this.handleResult} />
         <ShowScreen result={this.state.result} />
