@@ -3,7 +3,7 @@ import { getData } from '../servicios/getPokeList';
 
 interface State {
   query: string;
-  result: any;
+  result: null;
   isLoading: boolean;
 }
 
