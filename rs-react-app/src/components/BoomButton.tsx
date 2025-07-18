@@ -22,7 +22,7 @@ export class BoomButton extends Component<{}, State> {
 
     return (
       <button onClick={this.handleClick} style={{ padding: 10, fontSize: 16 }}>
-        Boom Button
+        BoomButton
       </button>
     );
   }
