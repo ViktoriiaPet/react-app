@@ -1,0 +1,30 @@
+
+import { Component } from "react";
+
+interface State {
+  explode: boolean;
+}
+
+export class BoomButton extends Component<{}, State> {
+  constructor(props: {}) {
+    super(props);
+    this.state = { explode: false };
+  }
+
+  handleClick = () => {
+    this.setState({ explode: true });
+  };
+
+  render() {
+    if (this.state.explode) {
+      throw new Error("Boooom");
+    }
+
+    return (
+      <button onClick={this.handleClick} style={{ padding: 10, fontSize: 16 }}>
+        Boom Button
+      </button>
+    );
+  }
+}
+

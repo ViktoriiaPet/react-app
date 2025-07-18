@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { SearchingBlock } from '../components/SearchBlock';
 import { ShowScreen } from '../components/ShowBlock';
+import { BoomButton } from '../components/BoomButton';
 
 interface PokemonData {
   name: string;
@@ -31,6 +32,7 @@ export default class SearchPage extends Component<object, State> {
         </h3>
         <SearchingBlock onResult={this.handleResult} />
         <ShowScreen result={this.state.result} />
+        <BoomButton />
       </>
     );
   }
