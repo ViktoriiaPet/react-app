@@ -46,7 +46,7 @@ describe('SearchingPoke', ()=> {
       expect(consoleSpy).toHaveBeenCalledWith(error);
       expect(onResult).not.toHaveBeenCalled();
     });
-
+    expect(localStorage.getItem('words')).toBe('missingno');
     consoleSpy.mockRestore();
   });
 })
