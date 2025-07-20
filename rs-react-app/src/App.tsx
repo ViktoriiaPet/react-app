@@ -7,10 +7,11 @@ import SearchPage from './pages/Searching.js';
 export default class App extends Component {
   render() {
     return (
-    <React.StrictMode>
-      <ErrorBoundary>
-        <SearchPage />
-      </ErrorBoundary>
-    </React.StrictMode>)
+      <React.StrictMode>
+        <ErrorBoundary>
+          <SearchPage />
+        </ErrorBoundary>
+      </React.StrictMode>
+    );
   }
 }

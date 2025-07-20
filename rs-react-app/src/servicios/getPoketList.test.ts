@@ -28,7 +28,9 @@ describe('getData', () => {
     const result = await getData();
 
     expect(result).toEqual(mockData);
-    expect(fetchSpy).toHaveBeenCalledWith('https://pokeapi.co/api/v2/pokemon/pikachu/');
+    expect(fetchSpy).toHaveBeenCalledWith(
+      'https://pokeapi.co/api/v2/pokemon/pikachu/'
+    );
   });
 
   it('logs error when fetch response is not ok', async () => {

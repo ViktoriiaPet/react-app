@@ -1,12 +1,11 @@
-
-import { Component } from "react";
+import { Component } from 'react';
 
 interface State {
   explode: boolean;
 }
 
-export class BoomButton extends Component<{}, State> {
-  constructor(props: {}) {
+export class BoomButton extends Component<Record<string, never>, State> {
+  constructor(props: Record<string, never>) {
     super(props);
     this.state = { explode: false };
   }
@@ -17,7 +16,7 @@ export class BoomButton extends Component<{}, State> {
 
   render() {
     if (this.state.explode) {
-      throw new Error("Boooom");
+      throw new Error('Boooom');
     }
 
     return (
@@ -27,4 +26,3 @@ export class BoomButton extends Component<{}, State> {
     );
   }
 }
-
