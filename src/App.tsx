@@ -4,6 +4,7 @@ import { Route, Routes, Link } from 'react-router-dom';
 
 import SearchPage from './pages/Searching.js';
 import { MasterPage } from './pages/MasterScreen.js';
+import { NotFoundPage } from './pages/ErrorPage.js';
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/react-app/" element={<SearchPage />} />
           <Route path="/react-app/about" element={<AboutPage />} />
           <Route path="/react-app/masterPage/:name" element={<MasterPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </ErrorBoundary>
     </>
