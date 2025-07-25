@@ -4,7 +4,7 @@ export async function getData() {
   if (isEnter) {
     endPoint = `${isEnter}/`;
   } else {
-    endPoint = `?limit=20&offset=20`;
+    endPoint = `?offset=0&limit=20`;
   }
   const url = `https://pokeapi.co/api/v2/pokemon/${endPoint}`;
   try {

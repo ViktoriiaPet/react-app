@@ -1,11 +1,6 @@
-import { Component } from 'react';
 import { getData } from '../servicios/getPokeList';
+import { useState, useCallback, useEffect } from 'react';
 
-interface State {
-  query: string;
-  result: null;
-  isLoading: boolean;
-}
 
 interface PokemonData {
   name: string;
@@ -15,56 +10,76 @@ interface PokemonData {
     front_default: string;
   };
 }
+interface PokemonShort {
+  name: string;
+  url: string;
+}
+
+interface PokeListResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: PokemonShort[];
+}
+
+type ResultType = PokemonData | PokeListResponse | null;
 
 export interface SearchingBlockProps {
-  onResult: (data: PokemonData) => void;
+  onResult: (data: ResultType) => void;
 }
 
-interface State {
-  query: string;
-  isLoading: boolean;
-}
 
-export class SearchingBlock extends Component<SearchingBlockProps, State> {
-  constructor(props: SearchingBlockProps) {
-    super(props);
-    this.state = {
-      query: localStorage.getItem('words') || '',
-      result: null,
-      isLoading: false,
-    };
-  }
-  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ query: e.target.value });
+export function SearchingBlock ({onResult}:SearchingBlockProps) {
+
+  const [query, setQuery] = useState(()=>localStorage.getItem('words') || '');
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value)
   };
-  handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback (
+    async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    this.setState({
-      isLoading: true,
-    });
+    setIsLoading(true);
     localStorage.removeItem('words');
-    localStorage.setItem('words', this.state.query);
+    localStorage.setItem('words', query);
 
-    getData()
-      .then((data) => {
-        this.props.onResult(data);
-        this.setState({ isLoading: false });
-      })
-      .catch((error) => {
+    try {
+      const data = await getData();
+      if (data) onResult(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+,[query, onResult]
+)
+
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      setIsLoading(true);
+      try {
+        const data = await getData();
+        if (data) onResult(data);
+      } catch (error) {
         console.error(error);
-        this.setState({ isLoading: false });
-      });
-  };
-  render() {
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchInitialData();
+  }, []);
+
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <input
           placeholder="Please, enter..."
-          value={this.state.query}
-          onChange={this.handleChange}
+          value={query}
+          onChange={handleChange}
         ></input>
         <button type="submit">Search!</button>
       </form>
     );
-  }
 }

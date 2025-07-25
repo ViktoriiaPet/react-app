@@ -1,7 +1,7 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { SearchingBlock } from '../components/SearchBlock';
 import { ShowScreen } from '../components/ShowBlock';
-import { BoomButton } from '../components/BoomButton';
+
 
 interface PokemonData {
   name: string;
@@ -11,18 +11,29 @@ interface PokemonData {
     front_default: string;
   };
 }
-interface State {
-  result: PokemonData | null;
+
+interface PokemonShort {
+  name: string;
+  url: string;
 }
-export default class SearchPage extends Component<object, State> {
-  constructor(props: object) {
-    super(props);
-    this.state = { result: null };
-  }
-  handleResult = (data: PokemonData) => {
-    this.setState({ result: data });
+
+interface PokeListResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: PokemonShort[];
+}
+
+type ResultType = PokemonData | PokeListResponse | null;
+
+export default function SearchPage () {
+
+const [result, setResult] = useState<ResultType>(null);
+
+ const handleResult = (data: ResultType) => {
+    setResult(data);
   };
-  render() {
+
     return (
       <>
         <h1>Welcome to the Main &apos;Pokemon&apos; page!</h1>
@@ -30,10 +41,8 @@ export default class SearchPage extends Component<object, State> {
           You can try to enter names of pokemons (for exapmle &quot;ditto&quot;,
           &quot;raichu&quot;, &quot;pikachu&quot;)
         </h3>
-        <SearchingBlock onResult={this.handleResult} />
-        <ShowScreen result={this.state.result} />
-        <BoomButton />
+        <SearchingBlock onResult={handleResult} />
+        <ShowScreen result={result} />
       </>
     );
-  }
 }
