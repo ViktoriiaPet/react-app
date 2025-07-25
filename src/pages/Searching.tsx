@@ -64,7 +64,7 @@ export default function SearchPage() {
 
       <ShowScreen result={result} />
 
-      {result && 'count' in result && (
+      {result && 'count' in result && result.count > limit && (
         <div>
           <button disabled={page <= 1} onClick={() => goToPage(page - 1)}>
             Previous
