@@ -1,17 +1,28 @@
-import { Component } from 'react';
 import { ErrorBoundary } from './components/ErrorBoundary.js';
-import React from 'react';
+import { AboutPage } from './pages/About.js';
+import { Route, Routes, Link } from 'react-router-dom';
 
 import SearchPage from './pages/Searching.js';
+import { MasterPage } from './pages/MasterScreen.js';
 
-export default class App extends Component {
-  render() {
-    return (
-      <React.StrictMode>
-        <ErrorBoundary>
-          <SearchPage />
-        </ErrorBoundary>
-      </React.StrictMode>
-    );
-  }
+export default function App() {
+  return (
+    <>
+      <ErrorBoundary>
+        <header>
+          <Link to="/react-app/">
+            <button>Home</button>
+          </Link>
+          <Link to="/react-app/about">
+            <button>About</button>
+          </Link>
+        </header>
+        <Routes>
+          <Route path="/react-app/" element={<SearchPage />} />
+          <Route path="/react-app/about" element={<AboutPage />} />
+          <Route path="/react-app/masterPage/:name" element={<MasterPage />} />
+        </Routes>
+      </ErrorBoundary>
+    </>
+  );
 }

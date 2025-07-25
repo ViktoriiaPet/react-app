@@ -1,7 +1,6 @@
 import { getData } from '../servicios/getPokeList';
 import { useState, useCallback, useEffect } from 'react';
 
-
 interface PokemonData {
   name: string;
   id: number;
@@ -28,33 +27,31 @@ export interface SearchingBlockProps {
   onResult: (data: ResultType) => void;
 }
 
+export function SearchingBlock({ onResult }: SearchingBlockProps) {
+  const [query, setQuery] = useState(() => localStorage.getItem('words') || '');
+  const [, setIsLoading] = useState(false);
 
-export function SearchingBlock ({onResult}:SearchingBlockProps) {
-
-  const [query, setQuery] = useState(()=>localStorage.getItem('words') || '');
-  const [isLoading, setIsLoading] = useState(false);
-  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value)
+    setQuery(e.target.value);
   };
-  const handleSubmit = useCallback (
+  const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-    localStorage.removeItem('words');
-    localStorage.setItem('words', query);
+      e.preventDefault();
+      setIsLoading(true);
+      localStorage.removeItem('words');
+      localStorage.setItem('words', query);
 
-    try {
-      const data = await getData();
-      if (data) onResult(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-,[query, onResult]
-)
+      try {
+        const data = await getData();
+        if (data) onResult(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [query, onResult]
+  );
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -72,14 +69,14 @@ export function SearchingBlock ({onResult}:SearchingBlockProps) {
     fetchInitialData();
   }, []);
 
-    return (
-      <form onSubmit={handleSubmit}>
-        <input
-          placeholder="Please, enter..."
-          value={query}
-          onChange={handleChange}
-        ></input>
-        <button type="submit">Search!</button>
-      </form>
-    );
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        placeholder="Please, enter..."
+        value={query}
+        onChange={handleChange}
+      ></input>
+      <button type="submit">Search!</button>
+    </form>
+  );
 }

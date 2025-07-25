@@ -1,16 +1,19 @@
 import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom/client';
+import { PokemonProvider } from './components/PokemonContext.tsx';
+
+import { BrowserRouter } from 'react-router-dom';
+
 import './index.css';
 import App from './App.tsx';
 
-const rootElement = document.getElementById('root');
-
-if (!rootElement) {
-  throw new Error('Root element not found');
-}
-
-createRoot(rootElement).render(
+const root = ReactDOM.createRoot(document.getElementById('root')!);
+root.render(
   <StrictMode>
-    <App />
+    <PokemonProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </PokemonProvider>
   </StrictMode>
 );

@@ -1,5 +1,7 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
+import { getData } from '../servicios/getPokeList';
+import { setCachedPokemonList } from '../servicios/getPokeList';
 
 export interface PokemonShort {
   name: string;
@@ -20,6 +22,20 @@ const PokemonContext = createContext<{
 
 export const PokemonProvider = ({ children }: Props) => {
   const [allPokemon, setAllPokemon] = useState<PokemonShort[] | null>(null);
+
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await getData(0, 1300);
+      if (data?.results) {
+        setAllPokemon(data.results);
+        setCachedPokemonList(data.results);
+        console.log('saved results', data.results);
+      }
+    };
+
+    loadData();
+  }, []);
+
   return (
     <PokemonContext.Provider value={{ allPokemon, setAllPokemon }}>
       {children}
@@ -27,3 +43,4 @@ export const PokemonProvider = ({ children }: Props) => {
   );
 };
 
+export default PokemonContext;

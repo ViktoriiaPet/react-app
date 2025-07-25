@@ -1,12 +1,30 @@
-export async function getData() {
-  const isEnter = localStorage.getItem('words');
-  let endPoint = null;
-  if (isEnter) {
-    endPoint = `${isEnter}/`;
-  } else {
-    endPoint = `?offset=0&limit=20`;
+import type { PokemonShort } from '../components/PokemonContext';
+
+let cachedPokemonList: PokemonShort[] | null = null;
+
+export function setCachedPokemonList(list: PokemonShort[]) {
+  cachedPokemonList = list;
+}
+
+export async function getData(offset = 0, limit = 20) {
+  const searchWord = localStorage.getItem('words')?.toLowerCase() || '';
+
+  if (searchWord && cachedPokemonList) {
+    const filtered = cachedPokemonList.filter((p) =>
+      p.name.toLowerCase().includes(searchWord)
+    );
+
+    const paginated = filtered.slice(offset, offset + limit);
+
+    return {
+      count: filtered.length,
+      next: null,
+      previous: null,
+      results: paginated,
+    };
   }
-  const url = `https://pokeapi.co/api/v2/pokemon/${endPoint}`;
+
+  const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`;
   try {
     const response = await fetch(url);
     if (!response.ok) {
