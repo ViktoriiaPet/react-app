@@ -19,9 +19,10 @@ export default function App() {
           </Link>
         </header>
         <Routes>
-          <Route path="/react-app/" element={<SearchPage />} />
+          <Route path="/react-app/" element={<SearchPage />}>
+            <Route path=':name' element={<MasterPage />} />
+          </Route>
           <Route path="/react-app/about" element={<AboutPage />} />
-          <Route path="/react-app/masterPage/:name" element={<MasterPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </ErrorBoundary>

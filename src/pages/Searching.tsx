@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { SearchingBlock } from '../components/SearchBlock';
 import { ShowScreen } from '../components/ShowBlock';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Outlet, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { getData } from '../servicios/getPokeList';
 
 type ResultType = PokemonData | PokeListResponse | null;
@@ -31,6 +31,11 @@ export default function SearchPage() {
   const [result, setResult] = useState<ResultType>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get('page') || '1');
+  const { name } = useParams();
+
+  const navigate = useNavigate();
+const location = useLocation();
+
 
   const limit = 20;
   const offset = (page - 1) * limit;
@@ -52,8 +57,14 @@ export default function SearchPage() {
     setResult(data);
   };
 
+  const handlePokemonClick = (name: string) => {
+      const currentSearch = searchParams.toString();
+      navigate(`${name}?${currentSearch}`);
+  };
+
   return (
-    <>
+    <div style={{ display: 'flex' }}>
+      <div style={{ flex: 1, paddingRight: '1rem', borderRight: '1px solid #ccc' }}>
       <h1>Welcome to the Main &apos;Pokemon&apos; page!</h1>
       <h3>
         You can try to enter names of pokemons (for example &quot;ditto&quot;,
@@ -62,7 +73,7 @@ export default function SearchPage() {
 
       <SearchingBlock onResult={handleResult} />
 
-      <ShowScreen result={result} />
+      <ShowScreen result={result} onPokemonClick={handlePokemonClick} />
 
       {result && 'count' in result && result.count > limit && (
         <div>
@@ -78,6 +89,26 @@ export default function SearchPage() {
           </button>
         </div>
       )}
-    </>
+    </div>
+      {name && (
+        <div>
+        <button
+        onClick={() => navigate({ pathname: '/react-app/', search: location.search })}
+        style={{
+          marginLeft:'50%'
+        }}>Close Detail Page</button>
+         <div
+          style={{
+            flex: 1,
+            borderLeft: '1px solid #ccc',
+            padding: '1rem',
+            marginLeft: '1rem',
+          }}
+        >
+          <Outlet />
+        </div>
+        </div>
+      ) }
+    </div>
   );
 }
