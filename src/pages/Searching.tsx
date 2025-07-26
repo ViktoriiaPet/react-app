@@ -1,7 +1,13 @@
 import { useState, useEffect } from 'react';
 import { SearchingBlock } from '../components/SearchBlock';
 import { ShowScreen } from '../components/ShowBlock';
-import { useSearchParams, Outlet, useParams, useNavigate, useLocation } from 'react-router-dom';
+import {
+  useSearchParams,
+  Outlet,
+  useParams,
+  useNavigate,
+  useLocation,
+} from 'react-router-dom';
 import { getData } from '../servicios/getPokeList';
 
 type ResultType = PokemonData | PokeListResponse | null;
@@ -34,8 +40,7 @@ export default function SearchPage() {
   const { name } = useParams();
 
   const navigate = useNavigate();
-const location = useLocation();
-
+  const location = useLocation();
 
   const limit = 20;
   const offset = (page - 1) * limit;
@@ -58,57 +63,64 @@ const location = useLocation();
   };
 
   const handlePokemonClick = (name: string) => {
-      const currentSearch = searchParams.toString();
-      navigate(`${name}?${currentSearch}`);
+    const currentSearch = searchParams.toString();
+    navigate(`${name}?${currentSearch}`);
   };
 
   return (
     <div style={{ display: 'flex' }}>
-      <div style={{ flex: 1, paddingRight: '1rem', borderRight: '1px solid #ccc' }}>
-      <h1>Welcome to the Main &apos;Pokemon&apos; page!</h1>
-      <h3>
-        You can try to enter names of pokemons (for example &quot;ditto&quot;,
-        &quot;raichu&quot;, &quot;pikachu&quot;)
-      </h3>
+      <div
+        style={{ flex: 1, paddingRight: '1rem', borderRight: '1px solid #ccc' }}
+      >
+        <h1>Welcome to the Main &apos;Pokemon&apos; page!</h1>
+        <h3>
+          You can try to enter names of pokemons (for example &quot;ditto&quot;,
+          &quot;raichu&quot;, &quot;pikachu&quot;)
+        </h3>
 
-      <SearchingBlock onResult={handleResult} />
+        <SearchingBlock onResult={handleResult} />
 
-      <ShowScreen result={result} onPokemonClick={handlePokemonClick} />
+        <ShowScreen result={result} onPokemonClick={handlePokemonClick} />
 
-      {result && 'count' in result && result.count > limit && (
-        <div>
-          <button disabled={page <= 1} onClick={() => goToPage(page - 1)}>
-            Previous
-          </button>
-          <span style={{ margin: '0 10px' }}>Page {page}</span>
-          <button
-            disabled={page >= Math.ceil(result.count / limit)}
-            onClick={() => goToPage(page + 1)}
-          >
-            Next
-          </button>
-        </div>
-      )}
-    </div>
+        {result && 'count' in result && result.count > limit && (
+          <div>
+            <button disabled={page <= 1} onClick={() => goToPage(page - 1)}>
+              Previous
+            </button>
+            <span style={{ margin: '0 10px' }}>Page {page}</span>
+            <button
+              disabled={page >= Math.ceil(result.count / limit)}
+              onClick={() => goToPage(page + 1)}
+            >
+              Next
+            </button>
+          </div>
+        )}
+      </div>
       {name && (
         <div>
-        <button
-        onClick={() => navigate({ pathname: '/react-app/', search: location.search })}
-        style={{
-          marginLeft:'50%'
-        }}>Close Detail Page</button>
-         <div
-          style={{
-            flex: 1,
-            borderLeft: '1px solid #ccc',
-            padding: '1rem',
-            marginLeft: '1rem',
-          }}
-        >
-          <Outlet />
+          <button
+            onClick={() =>
+              navigate({ pathname: '/react-app/', search: location.search })
+            }
+            style={{
+              marginLeft: '50%',
+            }}
+          >
+            Close Detail Page
+          </button>
+          <div
+            style={{
+              flex: 1,
+              borderLeft: '1px solid #ccc',
+              padding: '1rem',
+              marginLeft: '1rem',
+            }}
+          >
+            <Outlet />
+          </div>
         </div>
-        </div>
-      ) }
+      )}
     </div>
   );
 }

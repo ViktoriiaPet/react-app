@@ -20,7 +20,7 @@ export default function App() {
         </header>
         <Routes>
           <Route path="/react-app/" element={<SearchPage />}>
-            <Route path=':name' element={<MasterPage />} />
+            <Route path=":name" element={<MasterPage />} />
           </Route>
           <Route path="/react-app/about" element={<AboutPage />} />
           <Route path="*" element={<NotFoundPage />} />

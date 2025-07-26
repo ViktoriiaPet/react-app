@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
 
 interface PokemonData {
   name: string;
@@ -92,8 +91,6 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
             ))}
           </ul>
         </div>
-
-
       </div>
     );
   }

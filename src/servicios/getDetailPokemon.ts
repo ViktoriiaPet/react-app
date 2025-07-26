@@ -1,5 +1,5 @@
-export async function getDetailPokemon(name:string) {
-    const url = `https://pokeapi.co/api/v2/pokemon/${name}`;
+export async function getDetailPokemon(name: string) {
+  const url = `https://pokeapi.co/api/v2/pokemon/${name}`;
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -15,5 +15,5 @@ export async function getDetailPokemon(name:string) {
     } else {
       console.error('Unknown error', error);
     }
-}
+  }
 }
