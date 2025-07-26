@@ -1,5 +1,6 @@
 import { getData } from '../servicios/getPokeList';
 import { useState, useCallback, useEffect } from 'react';
+import { useLocalStorage } from '../servicios/useLocalStorage';
 
 interface PokemonData {
   name: string;
@@ -28,8 +29,10 @@ export interface SearchingBlockProps {
 }
 
 export function SearchingBlock({ onResult }: SearchingBlockProps) {
-  const [query, setQuery] = useState(() => localStorage.getItem('words') || '');
+  const {setItem, getItem} = useLocalStorage('words')
+  const [query, setQuery] = useState(() => getItem() || '');
   const [, setIsLoading] = useState(false);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
@@ -38,8 +41,7 @@ export function SearchingBlock({ onResult }: SearchingBlockProps) {
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setIsLoading(true);
-      localStorage.removeItem('words');
-      localStorage.setItem('words', query);
+      setItem(query)
 
       try {
         const data = await getData();
