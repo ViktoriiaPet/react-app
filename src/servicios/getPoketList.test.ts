@@ -13,25 +13,25 @@ describe('getData', () => {
     vi.restoreAllMocks();
   });
 
-it('returns filtered cached results based on localStorage search word', async () => {
-  localStorage.setItem('words', 'saur');
-  setCachedPokemonList(mockList);
+  it('returns filtered cached results based on localStorage search word', async () => {
+    localStorage.setItem('words', 'saur');
+    setCachedPokemonList(mockList);
 
-  const result = await getData(0, 2);
+    const result = await getData(0, 2);
 
-  expect(result?.results.length).toBe(2);
-  expect(result?.results[0].name).toBe('bulbasaur');
-  expect(result?.results[1].name).toBe('ivysaur');
-  expect(result?.count).toBe(3);
-});
+    expect(result?.results.length).toBe(2);
+    expect(result?.results[0].name).toBe('bulbasaur');
+    expect(result?.results[1].name).toBe('ivysaur');
+    expect(result?.count).toBe(3);
+  });
 
   it('falls back to fetch when no cache or search word', async () => {
     const mockJson = { count: 1, results: [{ name: 'pikachu', url: 'url' }] };
 
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve(mockJson),
-    }) as any;
+      json: async () => mockJson,
+    }) as unknown as typeof fetch;
 
     const result = await getData();
 
@@ -43,7 +43,7 @@ it('returns filtered cached results based on localStorage search word', async ()
     const error = new Error('fail');
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    global.fetch = vi.fn().mockRejectedValue(error) as any;
+    global.fetch = vi.fn().mockRejectedValue(error) as unknown as typeof fetch;
 
     await getData();
     expect(consoleSpy).toHaveBeenCalledWith('fail');

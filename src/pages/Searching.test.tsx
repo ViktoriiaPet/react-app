@@ -4,9 +4,12 @@ import { vi } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import * as getPokeListModule from '../servicios/getPokeList';
 
-// Мокаем ShowScreen для теста handlePokemonClick
+interface ShowScreenProps {
+  onPokemonClick: (name: string) => void;
+}
+
 vi.mock('../components/ShowBlock', () => ({
-  ShowScreen: ({ onPokemonClick }: any) => (
+  ShowScreen: ({ onPokemonClick }: ShowScreenProps) => (
     <button onClick={() => onPokemonClick('pikachu')}>Click Pokemon</button>
   ),
 }));
@@ -69,22 +72,25 @@ describe('SearchPage', () => {
     expect(await screen.findByText(/Page 2/)).toBeInTheDocument();
   });
 
-it('renders close detail page button and navigates back on click', async () => {
-  render(
-    <MemoryRouter initialEntries={['/react-app/pikachu?page=2']}>
-      <Routes>
-        <Route path="/react-app/:name" element={<SearchPage />} />
-        <Route path="/react-app/" element={<SearchPage />} />
-      </Routes>
-    </MemoryRouter>
-  );
+  it('renders close detail page button and navigates back on click', async () => {
+    render(
+      <MemoryRouter initialEntries={['/react-app/pikachu?page=2']}>
+        <Routes>
+          <Route path="/react-app/:name" element={<SearchPage />} />
+          <Route path="/react-app/" element={<SearchPage />} />
+        </Routes>
+      </MemoryRouter>
+    );
 
-  const closeButton = await screen.findByRole('button', { name: /close detail page/i });
-  expect(closeButton).toBeInTheDocument();
+    const closeButton = await screen.findByRole('button', {
+      name: /close detail page/i,
+    });
+    expect(closeButton).toBeInTheDocument();
 
-  fireEvent.click(closeButton);
+    fireEvent.click(closeButton);
 
-  // Проверяем, что теперь отображается контент главной страницы (без :name)
-  expect(await screen.findByText("Welcome to the Main 'Pokemon' page!")).toBeInTheDocument();
-});
+    expect(
+      await screen.findByText("Welcome to the Main 'Pokemon' page!")
+    ).toBeInTheDocument();
+  });
 });

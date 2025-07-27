@@ -22,5 +22,5 @@ describe('App routing and layout', () => {
     );
 
     expect(screen.getByText(/is not exist/i)).toBeInTheDocument();
-});
+  });
 });

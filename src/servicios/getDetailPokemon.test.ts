@@ -24,12 +24,16 @@ describe('getDetailPokemon', () => {
 
     const result = await getDetailPokemon('pikachu');
 
-    expect(fetch).toHaveBeenCalledWith('https://pokeapi.co/api/v2/pokemon/pikachu');
+    expect(fetch).toHaveBeenCalledWith(
+      'https://pokeapi.co/api/v2/pokemon/pikachu'
+    );
     expect(result).toEqual(mockData);
   });
 
   it('logs error when response is not ok', async () => {
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
 
     global.fetch = vi.fn().mockResolvedValueOnce({
       ok: false,
@@ -42,7 +46,9 @@ describe('getDetailPokemon', () => {
   });
 
   it('logs unknown error if fetch throws non-Error', async () => {
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
     global.fetch = vi.fn().mockRejectedValueOnce('boom');
 
     const result = await getDetailPokemon('crashmon');

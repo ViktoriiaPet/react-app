@@ -1,9 +1,10 @@
-import { PokemonProvider } from "./PokemonContext";
-import PokemonContext from "./PokemonContext";
+import { PokemonProvider } from './PokemonContext';
+import PokemonContext from './PokemonContext';
 import { getData } from '../servicios/getPokeList';
+import type { PokemonShort } from './PokemonContext';
 
 import { render, waitFor } from '@testing-library/react';
-import { vi } from "vitest";
+import { vi } from 'vitest';
 
 vi.mock('../servicios/getPokeList', () => ({
   getData: vi.fn(),
@@ -21,7 +22,13 @@ describe('PokemonProvider', () => {
   it('fetches and sets allPokemon data', async () => {
     (getData as jest.Mock).mockResolvedValue(mockData);
 
-    let contextValue: any;
+    let contextValue: {
+      allPokemon: PokemonShort[] | null;
+      setAllPokemon: (data: PokemonShort[]) => void;
+    } = {
+      allPokemon: null,
+      setAllPokemon: () => {},
+    };
 
     render(
       <PokemonProvider>
