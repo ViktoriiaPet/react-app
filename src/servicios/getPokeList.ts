@@ -1,5 +1,4 @@
 import type { PokemonShort } from '../components/PokemonContext';
-import { useLocalStorage } from './useLocalStorage';
 
 let cachedPokemonList: PokemonShort[] | null = null;
 
@@ -8,8 +7,7 @@ export function setCachedPokemonList(list: PokemonShort[]) {
 }
 
 export async function getData(offset = 0, limit = 20) {
-  const {getItem} = useLocalStorage('words')
-  const searchWord = getItem()?.toLowerCase() || '';
+  const searchWord = localStorage.getItem('words')?.toLowerCase() || '';
 
   if (searchWord && cachedPokemonList) {
     const filtered = cachedPokemonList.filter((p) =>

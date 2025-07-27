@@ -13,7 +13,8 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "test:precommit": "vitest run --coverage"
+    "test:precommit": "vitest run --coverage",
+    "test:watch": "vitest --watch"
   },
   "dependencies": {
     "react": "^19.1.0",

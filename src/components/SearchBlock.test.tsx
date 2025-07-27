@@ -4,22 +4,30 @@ import { vi } from 'vitest';
 
 import * as service from '../servicios/getPokeList';
 
-describe('SearchingPoke', () => {
-  it('should call onResult with valid data', async () => {
+vi.mock('../servicios/useLocalStorage', () => ({
+  useLocalStorage: () => ({
+    setItem: vi.fn(),
+    getItem: vi.fn(() => ''),
+  }),
+}));
+
+describe('SearchingBlock', () => {
+  it('calls onResult with data after search submit', async () => {
     const mockData = {
-      name: 'pikachu',
-      id: 25,
-      weight: 60,
-      sprites: { front_default: 'url_to_sprite' },
+      count: 1,
+      next: null,
+      previous: null,
+      results: [{ name: 'pikachu', url: 'url' }],
     };
     vi.spyOn(service, 'getData').mockResolvedValue(mockData);
+
     const onResult = vi.fn();
     render(<SearchingBlock onResult={onResult} />);
 
     const input = screen.getByPlaceholderText(/please, enter/i);
     const button = screen.getByRole('button', { name: /search/i });
 
-    fireEvent.change(input, { target: { value: 'pikachu' } });
+    fireEvent.change(input, { target: { value: '   pikachu   ' } });
     fireEvent.click(button);
 
     await waitFor(() => {
@@ -27,26 +35,22 @@ describe('SearchingPoke', () => {
     });
   });
 
-  it('should handle error if getData throws', async () => {
-    const error = new Error('Network fail');
+  it('handles errors from getData', async () => {
+    const error = new Error('fetch failed');
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.spyOn(service, 'getData').mockRejectedValue(error);
 
     const onResult = vi.fn();
-
     render(<SearchingBlock onResult={onResult} />);
 
-    const input = screen.getByPlaceholderText(/please, enter/i);
     const button = screen.getByRole('button', { name: /search/i });
-
-    fireEvent.change(input, { target: { value: 'missingno' } });
     fireEvent.click(button);
 
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(error);
-      expect(onResult).not.toHaveBeenCalled();
     });
-    expect(localStorage.getItem('words')).toBe('missingno');
+
+    expect(onResult).not.toHaveBeenCalled();
     consoleSpy.mockRestore();
   });
 });

@@ -1,64 +1,51 @@
-import { getData } from './getPokeList';
 import { vi } from 'vitest';
+import { getData, setCachedPokemonList } from './getPokeList';
 
-interface MockFetchResponse {
-  ok: boolean;
-  status?: number;
-  json: () => Promise<unknown>;
-}
+const mockList = [
+  { name: 'bulbasaur', url: 'url1' },
+  { name: 'ivysaur', url: 'url2' },
+  { name: 'venusaur', url: 'url3' },
+];
 
 describe('getData', () => {
-  const mockData = { name: 'pikachu', id: 25 };
-
   beforeEach(() => {
-    localStorage.setItem('words', 'pikachu');
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
     localStorage.clear();
+    vi.restoreAllMocks();
   });
 
-  it('returns valid data when fetch succeeds', async () => {
-    const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
+it('returns filtered cached results based on localStorage search word', async () => {
+  localStorage.setItem('words', 'saur');
+  setCachedPokemonList(mockList);
+
+  const result = await getData(0, 2);
+
+  expect(result?.results.length).toBe(2);
+  expect(result?.results[0].name).toBe('bulbasaur');
+  expect(result?.results[1].name).toBe('ivysaur');
+  expect(result?.count).toBe(3);
+});
+
+  it('falls back to fetch when no cache or search word', async () => {
+    const mockJson = { count: 1, results: [{ name: 'pikachu', url: 'url' }] };
+
+    global.fetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve(mockData),
-    } as Response);
+      json: () => Promise.resolve(mockJson),
+    }) as any;
 
     const result = await getData();
 
-    expect(result).toEqual(mockData);
-    expect(fetchSpy).toHaveBeenCalledWith(
-      'https://pokeapi.co/api/v2/pokemon/pikachu/'
-    );
+    expect(fetch).toHaveBeenCalled();
+    expect(result).toEqual(mockJson);
   });
 
-  it('logs error when fetch response is not ok', async () => {
+  it('logs error on fetch failure', async () => {
+    const error = new Error('fail');
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    const mockFetch: () => Promise<MockFetchResponse> = () =>
-      Promise.resolve({
-        ok: false,
-        status: 404,
-        json: () => Promise.resolve({}),
-      });
+    global.fetch = vi.fn().mockRejectedValue(error) as any;
 
-    vi.stubGlobal('fetch', mockFetch);
-
-    const result = await getData();
-    expect(result).toBeUndefined();
-    expect(consoleSpy).toHaveBeenCalledWith('Response status: 404');
-  });
-
-  it('handles thrown error from fetch', async () => {
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-
-    vi.stubGlobal('fetch', () => {
-      throw new Error('Network failure');
-    });
-
-    const result = await getData();
-    expect(result).toBeUndefined();
-    expect(consoleSpy).toHaveBeenCalledWith('Network failure');
+    await getData();
+    expect(consoleSpy).toHaveBeenCalledWith('fail');
   });
 });

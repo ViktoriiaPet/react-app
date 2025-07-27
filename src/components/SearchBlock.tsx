@@ -29,10 +29,9 @@ export interface SearchingBlockProps {
 }
 
 export function SearchingBlock({ onResult }: SearchingBlockProps) {
-  const {setItem, getItem} = useLocalStorage('words')
+  const { setItem, getItem } = useLocalStorage('words');
   const [query, setQuery] = useState(() => getItem() || '');
   const [, setIsLoading] = useState(false);
-
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
@@ -41,7 +40,7 @@ export function SearchingBlock({ onResult }: SearchingBlockProps) {
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setIsLoading(true);
-      setItem(query)
+      setItem(query.trim());
 
       try {
         const data = await getData();
