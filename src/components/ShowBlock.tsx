@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import lleno from '../assets/corazon-lleno.png'
+import vacio from '../assets/corazón-vacío.png'
 
 interface PokemonData {
   name: string;
@@ -31,6 +33,7 @@ type ResultType = PokemonData | PokeListResponse | null;
 export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
   const [detailedList, setDetailedList] = useState<PokemonData[]>([]);
   const [loading, setLoading] = useState(false);
+  const [liked, setLiked] = useState(false);
 
   const isListResponse = (res: ResultType): res is PokeListResponse => {
     return res !== null && 'results' in res && Array.isArray(res.results);
@@ -53,6 +56,15 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
     }
   }, [result]);
 
+  const handleClickCard = ()=> {
+    if (liked == true) {
+      setLiked(false)
+    } else {
+      setLiked(true)
+    }
+    
+  }
+
   if (!result) {
     return (
       <div className="granPantalla">
@@ -69,13 +81,21 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
       <div className="granPantalla">
         <div className="showPantalla">
           <h2>Pokémon list</h2>
-          <ul>
+          <ul 
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '2vw'
+          }}>
             {loading && <p>Loading...</p>}
 
             {detailedList.map((pokemon) => (
               <li
                 key={pokemon.id}
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: 'pointer',
+                  width: '12vw',
+                  height: '13vw'
+                 }}
                 onClick={() => onPokemonClick?.(pokemon.name)}
               >
                 <div id={pokemon.name}>
@@ -86,6 +106,25 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
                       alt={pokemon.name}
                     />
                   )}
+                </div>
+                <div
+                onClick={(handleClickCard)}>
+
+                {
+                  liked == false ? (
+                  <img src={`${lleno}`}
+                  style={{
+                    width: '2vw',
+                    height: '2vw'
+                  }}/>
+                  ) : (
+                  <img src={`${vacio}`}
+                  style={{
+                    width: '2vw',
+                    height: '2vw'
+                  }}/>
+                  )
+                }
                 </div>
               </li>
             ))}
