@@ -3,9 +3,11 @@ import lleno from '../assets/corazon-lleno.png';
 import vacio from '../assets/corazón-vacío.png';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectLikedIds } from '../features/LikedSlice';
-import { toggleLike } from '../features/LikedSlice';
+import { toggleLike, deleteAllLikedPokemons } from '../features/LikedSlice';
+import { DownoladedSelectedPokemons } from '../servicios/downloadedSelected';
+import type { AppDispatch } from '../app/store';
 
-interface PokemonData {
+export interface PokemonData {
   name: string;
   id: number;
   weight: number;
@@ -37,7 +39,7 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
   const [detailedList, setDetailedList] = useState<PokemonData[]>([]);
   const [loading, setLoading] = useState(false);
   const selectPokemons = useSelector(selectLikedIds);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const isListResponse = (res: ResultType): res is PokeListResponse => {
     return res !== null && 'results' in res && Array.isArray(res.results);
@@ -68,6 +70,9 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
       dispatch(toggleLike(id));
     }
   };
+  const handleDownload = () => {
+    dispatch(DownoladedSelectedPokemons(selectPokemons));
+  }
   if (!result) {
     return (
       <div className="granPantalla">
@@ -98,14 +103,21 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
                 key={pokemon.id}
                 style={{
                   cursor: 'pointer',
-                  width: '12vw',
-                  height: '13vw',
                   listStyleType: 'none',
                 }}
-                onClick={() => onPokemonClick?.(pokemon.name)}
+                
               >
-                <div id={pokemon.name}>
-                  <strong>{pokemon.name}</strong> —{' '}
+                <div id={pokemon.name}
+                onClick={() => onPokemonClick?.(pokemon.name)}
+                style={{
+                  border:'black, dotted, 1px',
+                  borderRadius:'16px',
+                  padding: '1vw',
+                  display:'flex',
+                  flexDirection: 'column'
+                }}
+                >
+                  <strong>{pokemon.name}</strong>{' '}
                   {pokemon.sprites.front_default && (
                     <img
                       src={pokemon.sprites.front_default}
@@ -150,8 +162,12 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
           >
             <p>You already selected {selectPokemons.length} pokemons</p>
             <div>
-              <button>Reject all pokemons</button>
-              <button>Download selected pokemons</button>
+              <button onClick={()=> {
+                 dispatch(deleteAllLikedPokemons())
+              } }>Reject all pokemons</button>
+              <button onClick={()=>{ handleDownload()
+              }}
+              >Download selected pokemons</button>
             </div>
             <div></div>
           </div>

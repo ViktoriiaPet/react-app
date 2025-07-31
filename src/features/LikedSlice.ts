@@ -19,8 +19,8 @@ export const likedSliceOnly = createSlice({
     getAllLikedPokemons: (state) => {
       console.log(state);
     },
-    deleteAllLikedPokemons: (state) => {
-      console.log(state);
+    deleteAllLikedPokemons: () => {
+      return initialState;
     },
   },
 });
