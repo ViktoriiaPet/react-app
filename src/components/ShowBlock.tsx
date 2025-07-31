@@ -96,7 +96,12 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
             {detailedList.map((pokemon) => (
               <li
                 key={pokemon.id}
-                style={{ cursor: 'pointer', width: '12vw', height: '13vw' }}
+                style={{
+                  cursor: 'pointer',
+                  width: '12vw',
+                  height: '13vw',
+                  listStyleType: 'none',
+                }}
                 onClick={() => onPokemonClick?.(pokemon.name)}
               >
                 <div id={pokemon.name}>
@@ -131,6 +136,26 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
             ))}
           </ul>
         </div>
+        {selectPokemons.length > 0 && (
+          <div
+            style={{
+              position: 'fixed',
+              bottom: '5vw',
+              left: '40vw',
+              backgroundColor: '#c5a7a7b3',
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '1vw',
+            }}
+          >
+            <p>You already selected {selectPokemons.length} pokemons</p>
+            <div>
+              <button>Reject all pokemons</button>
+              <button>Download selected pokemons</button>
+            </div>
+            <div></div>
+          </div>
+        )}
       </div>
     );
   }
