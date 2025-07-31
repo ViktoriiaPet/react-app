@@ -1,16 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import type { RootState } from '../app/store';
+
+const initialState: number[] = [];
 
 export const likedSliceOnly = createSlice({
-  name: 'like',
-  initialState: {
-    isLiked: false,
-  },
+  name: 'liked',
+  initialState,
   reducers: {
-    addLikeToCard: (state) => {
-      state.isLiked = false;
-    },
-    deleteLikeFromCard: (state) => {
-      state.isLiked = true;
+    toggleLike: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      if (state.includes(id)) {
+        return state.filter((item) => item !== id);
+      } else {
+        return [...state, id];
+      }
     },
     getAllLikedPokemons: (state) => {
       console.log(state);
@@ -21,10 +25,8 @@ export const likedSliceOnly = createSlice({
   },
 });
 
-export const {
-  addLikeToCard,
-  deleteLikeFromCard,
-  getAllLikedPokemons,
-  deleteAllLikedPokemons,
-} = likedSliceOnly.actions;
+export const { toggleLike, getAllLikedPokemons, deleteAllLikedPokemons } =
+  likedSliceOnly.actions;
 export default likedSliceOnly.reducer;
+
+export const selectLikedIds = (state: RootState) => state.liked;

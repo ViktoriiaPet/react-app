@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import lleno from '../assets/corazon-lleno.png';
 import vacio from '../assets/corazón-vacío.png';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectLikedIds } from '../features/LikedSlice';
+import { toggleLike } from '../features/LikedSlice';
 
 interface PokemonData {
   name: string;
@@ -33,7 +36,8 @@ type ResultType = PokemonData | PokeListResponse | null;
 export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
   const [detailedList, setDetailedList] = useState<PokemonData[]>([]);
   const [loading, setLoading] = useState(false);
-  const [liked, setLiked] = useState(false);
+  const selectPokemons = useSelector(selectLikedIds);
+  const dispatch = useDispatch();
 
   const isListResponse = (res: ResultType): res is PokeListResponse => {
     return res !== null && 'results' in res && Array.isArray(res.results);
@@ -56,14 +60,14 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
     }
   }, [result]);
 
-  const handleClickCard = () => {
-    if (liked == true) {
-      setLiked(false);
+  const handleClickToLike = (id: number) => {
+    if (selectPokemons.includes(id)) {
+      dispatch(toggleLike(id));
+      console.log(id);
     } else {
-      setLiked(true);
+      dispatch(toggleLike(id));
     }
   };
-
   if (!result) {
     return (
       <div className="granPantalla">
@@ -104,10 +108,10 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
                     />
                   )}
                 </div>
-                <div onClick={handleClickCard}>
-                  {liked == false ? (
+                <div onClick={() => handleClickToLike(pokemon.id)}>
+                  {selectPokemons.includes(pokemon.id) ? (
                     <img
-                      src={`${lleno}`}
+                      src={`${vacio}`}
                       style={{
                         width: '2vw',
                         height: '2vw',
@@ -115,7 +119,7 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
                     />
                   ) : (
                     <img
-                      src={`${vacio}`}
+                      src={`${lleno}`}
                       style={{
                         width: '2vw',
                         height: '2vw',

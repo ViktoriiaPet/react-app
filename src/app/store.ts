@@ -3,7 +3,7 @@ import { likedSliceOnly } from '../features/LikedSlice';
 
 export const store = configureStore({
   reducer: {
-    cards: likedSliceOnly.reducer,
+    liked: likedSliceOnly.reducer,
   },
 });
 
