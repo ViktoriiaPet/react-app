@@ -5,7 +5,9 @@ import type { PokemonData } from '../components/ShowBlock';
 export const DownoladedSelectedPokemons = createAsyncThunk(
   'liked/downloadSelectedPokemons',
   async (ids: number[]) => {
-    const data = await Promise.all(ids.map(id => getDetailPokemon(id.toString())));
+    const data = await Promise.all(
+      ids.map((id) => getDetailPokemon(id.toString()))
+    );
     const csv = generateCSV(data);
     downloadCSV(csv, ids.length);
     return data;
@@ -25,25 +27,22 @@ function downloadCSV(csvContent: string, count: number) {
   URL.revokeObjectURL(url);
 }
 
-
 function generateCSV(data: PokemonData[]) {
   if (data.length === 0) return '';
 
   const headers = ['id', 'name', 'weight', 'sprite'];
-  
-  const rows = data.map(pokemon => {
+
+  const rows = data.map((pokemon) => {
     const { id, name, weight, sprites } = pokemon;
     const spriteUrl = sprites.front_default || '';
-    
+
     return [
       id.toString(),
       `"${name.replace(/"/g, '""')}"`,
       weight.toString(),
-      `"${spriteUrl.replace(/"/g, '""')}"`
+      `"${spriteUrl.replace(/"/g, '""')}"`,
     ].join(',');
   });
 
   return [headers.join(','), ...rows].join('\r\n');
 }
-
-

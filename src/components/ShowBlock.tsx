@@ -72,7 +72,7 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
   };
   const handleDownload = () => {
     dispatch(DownoladedSelectedPokemons(selectPokemons));
-  }
+  };
   if (!result) {
     return (
       <div className="granPantalla">
@@ -105,17 +105,18 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
                   cursor: 'pointer',
                   listStyleType: 'none',
                 }}
-                
+                className="card"
               >
-                <div id={pokemon.name}
-                onClick={() => onPokemonClick?.(pokemon.name)}
-                style={{
-                  border:'black, dotted, 1px',
-                  borderRadius:'16px',
-                  padding: '1vw',
-                  display:'flex',
-                  flexDirection: 'column'
-                }}
+                <div
+                  id={pokemon.name}
+                  onClick={() => onPokemonClick?.(pokemon.name)}
+                  style={{
+                    border: 'black, dotted, 1px',
+                    borderRadius: '16px',
+                    padding: '1vw',
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
                 >
                   <strong>{pokemon.name}</strong>{' '}
                   {pokemon.sprites.front_default && (
@@ -149,25 +150,25 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
           </ul>
         </div>
         {selectPokemons.length > 0 && (
-          <div
-            style={{
-              position: 'fixed',
-              bottom: '5vw',
-              left: '40vw',
-              backgroundColor: '#c5a7a7b3',
-              display: 'flex',
-              flexDirection: 'column',
-              padding: '1vw',
-            }}
-          >
+          <div className="selectedBlock">
             <p>You already selected {selectPokemons.length} pokemons</p>
             <div>
-              <button onClick={()=> {
-                 dispatch(deleteAllLikedPokemons())
-              } }>Reject all pokemons</button>
-              <button onClick={()=>{ handleDownload()
-              }}
-              >Download selected pokemons</button>
+              <button
+                className="button"
+                onClick={() => {
+                  dispatch(deleteAllLikedPokemons());
+                }}
+              >
+                Reject all pokemons
+              </button>
+              <button
+                className="button"
+                onClick={() => {
+                  handleDownload();
+                }}
+              >
+                Download selected pokemons
+              </button>
             </div>
             <div></div>
           </div>

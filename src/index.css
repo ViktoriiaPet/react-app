@@ -66,3 +66,46 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+body.light {
+  background-color: white;
+  color: black;
+}
+
+body.dark {
+  background-color: #121212;
+  color: white;
+}
+
+body.light .card {
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+}
+
+body.dark .card {
+  background-color: #1f1f1f;
+  border: 1px solid #444;
+}
+
+body.light .button {
+  background-color: #f5f5f5;
+  color: #213547;
+}
+body.dark .button {
+  background-color: #535bf2;
+  color: #f5f5f5;
+}
+body.light .selectedBlock {
+  background-color: #c5a7a7bd;
+}
+body.dark .selectedBlock {
+  background-color: #f5f5f5b7;
+}
+.selectedBlock {
+  position: fixed;
+  bottom: 5vw;
+  left: 40vw;
+  display: flex;
+  flex-direction: column;
+  padding: 1vw;
+}

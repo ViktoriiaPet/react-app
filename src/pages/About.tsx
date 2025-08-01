@@ -52,7 +52,7 @@ export function AboutPage() {
         </p>
       </div>
       <a href="https://rs.school/courses/reactjs">
-        <button>Link to the course</button>
+        <button className="button">Link to the course</button>
       </a>
     </div>
   );
