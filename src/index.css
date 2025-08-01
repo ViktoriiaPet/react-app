@@ -30,6 +30,14 @@ body {
   min-height: 100vh;
 }
 
+header{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 3vw;
+  padding: 1vw;
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -78,13 +86,16 @@ body.dark {
 }
 
 body.light .card {
-  background-color: #f5f5f5;
-  border: 1px solid #ccc;
+    background-color: #f5f5f5;
+    padding: 1vw;
+    border-radius: 16px;
 }
 
 body.dark .card {
   background-color: #1f1f1f;
   border: 1px solid #444;
+  border-radius: 16px;
+  padding: 1vw;
 }
 
 body.light .button {
@@ -108,4 +119,20 @@ body.dark .selectedBlock {
   display: flex;
   flex-direction: column;
   padding: 1vw;
+  align-items: center;
+}
+
+.color{
+  width: 2vw;
+  height: 2vw;
+  border-radius: 16px;
+  padding: 0.2vw
+}
+
+body.dark .color{
+  background-color:#646cff;
+}
+
+body.light .color{
+  background-color: #e3d3d39c;
 }
