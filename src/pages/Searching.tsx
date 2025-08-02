@@ -70,7 +70,15 @@ export default function SearchPage() {
   return (
     <div style={{ display: 'flex' }}>
       <div
-        style={{ flex: 1, paddingRight: '1rem', borderRight: '1px solid #ccc', display: 'flex', justifyContent:'center', alignItems:'center', flexDirection: 'column' }}
+        style={{
+          flex: 1,
+          paddingRight: '1rem',
+          borderRight: '1px solid #ccc',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+        }}
       >
         <h1>Welcome to the Main &apos;Pokemon&apos; page!</h1>
         <h3>

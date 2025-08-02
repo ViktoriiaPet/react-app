@@ -116,7 +116,7 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
                     padding: '1vw',
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center'
+                    alignItems: 'center',
                   }}
                 >
                   <strong>{pokemon.name}</strong>{' '}
@@ -129,15 +129,9 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
                 </div>
                 <div onClick={() => handleClickToLike(pokemon.id)}>
                   {selectPokemons.includes(pokemon.id) ? (
-                    <img
-                      src={`${vacio}`}
-                      className='color'
-                    />
+                    <img src={`${vacio}`} className="color" />
                   ) : (
-                    <img
-                      src={`${lleno}`}
-                      className='color'
-                    />
+                    <img src={`${lleno}`} className="color" />
                   )}
                 </div>
               </li>
@@ -147,10 +141,12 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
         {selectPokemons.length > 0 && (
           <div className="selectedBlock">
             <p>You already selected {selectPokemons.length} pokemons</p>
-            <div style={{
-              display: 'flex',
-              gap: '1vw'
-            }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: '1vw',
+              }}
+            >
               <button
                 className="button"
                 onClick={() => {

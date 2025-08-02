@@ -14,11 +14,11 @@ export default function App() {
       <ErrorBoundary>
         <ThemeProvider>
           <header>
-            <Link to="/react-app/">
-              <button className="button">Home</button>
+            <Link to="/react-app/" className="button">
+              Home
             </Link>
-            <Link to="/react-app/about">
-              <button className="button">About</button>
+            <Link to="/react-app/about" className="button">
+              About
             </Link>
             <ThemeButton />
           </header>
