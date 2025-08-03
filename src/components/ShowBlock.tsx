@@ -129,9 +129,9 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
                 </div>
                 <div onClick={() => handleClickToLike(pokemon.id)}>
                   {selectPokemons.includes(pokemon.id) ? (
-                    <img src={`${vacio}`} className="color" alt="like button"/>
+                    <img src={`${vacio}`} className="color" alt="like button" />
                   ) : (
-                    <img src={`${lleno}`} className="color" alt="like button"/>
+                    <img src={`${lleno}`} className="color" alt="like button" />
                   )}
                 </div>
               </li>
