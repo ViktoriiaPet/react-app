@@ -77,7 +77,9 @@ export function SearchingBlock({ onResult }: SearchingBlockProps) {
         value={query}
         onChange={handleChange}
       ></input>
-      <button type="submit">Search!</button>
+      <button type="submit" className="button">
+        Search!
+      </button>
     </form>
   );
 }

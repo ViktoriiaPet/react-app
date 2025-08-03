@@ -1,16 +1,25 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { ShowScreen } from './ShowBlock';
 import { vi } from 'vitest';
+import { store } from '../app/store';
+import { Provider } from 'react-redux';
+import { toggleLike } from '../features/LikedSlice';
+import userEvent from '@testing-library/user-event';
 
 global.fetch = vi.fn();
 
 describe('ShowScreen', () => {
   afterEach(() => {
     vi.clearAllMocks();
+    store.dispatch({ type: 'liked/deleteAllLikedPokemons' });
   });
 
   it('renders fallback when result is null', () => {
-    render(<ShowScreen result={null} />);
+    render(
+      <Provider store={store}>
+        <ShowScreen result={null} />
+      </Provider>
+    );
     expect(screen.getByText(/will show here/i)).toBeInTheDocument();
   });
 
@@ -37,13 +46,20 @@ describe('ShowScreen', () => {
       json: () => Promise.resolve(fakeDetail),
     });
 
-    render(<ShowScreen result={fakeList} />);
+    render(
+      <Provider store={store}>
+        <ShowScreen result={fakeList} />
+      </Provider>
+    );
 
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.getByText(/bulbasaur/i)).toBeInTheDocument();
-      expect(screen.getByRole('img')).toHaveAttribute('src', 'bulba.png');
+      expect(screen.getByRole('img', { name: /bulbasaur/i })).toHaveAttribute(
+        'src',
+        'bulba.png'
+      );
     });
   });
 
@@ -55,7 +71,54 @@ describe('ShowScreen', () => {
       sprites: { front_default: 'pikachu.png' },
     };
 
-    render(<ShowScreen result={fakePokemon} />);
+    render(
+      <Provider store={store}>
+        <ShowScreen result={fakePokemon} />
+      </Provider>
+    );
     expect(screen.getByText(/no data available/i)).toBeInTheDocument();
+  });
+
+  it('logs id when unliking a pokemon', async () => {
+    const fakeList = {
+      count: 1,
+      next: null,
+      previous: null,
+      results: [
+        { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' },
+      ],
+    };
+
+    const fakeDetail = {
+      id: 1,
+      name: 'bulbasaur',
+      weight: 69,
+      sprites: {
+        front_default: 'bulba.png',
+      },
+    };
+
+    (fetch as jest.Mock).mockResolvedValue({
+      json: () => Promise.resolve(fakeDetail),
+    });
+
+    store.dispatch(toggleLike(1));
+
+    const consoleSpy = vi.spyOn(console, 'log');
+
+    render(
+      <Provider store={store}>
+        <ShowScreen result={fakeList} />
+      </Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/bulbasaur/i)).toBeInTheDocument();
+    });
+
+    const likeButton = screen.getByRole('img', { name: /like button/i });
+    await userEvent.click(likeButton);
+
+    expect(consoleSpy).toHaveBeenCalledWith(1);
   });
 });

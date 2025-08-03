@@ -70,7 +70,15 @@ export default function SearchPage() {
   return (
     <div style={{ display: 'flex' }}>
       <div
-        style={{ flex: 1, paddingRight: '1rem', borderRight: '1px solid #ccc' }}
+        style={{
+          flex: 1,
+          paddingRight: '1rem',
+          borderRight: '1px solid #ccc',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+        }}
       >
         <h1>Welcome to the Main &apos;Pokemon&apos; page!</h1>
         <h3>
@@ -84,11 +92,16 @@ export default function SearchPage() {
 
         {result && 'count' in result && result.count > limit && (
           <div>
-            <button disabled={page <= 1} onClick={() => goToPage(page - 1)}>
+            <button
+              className="button"
+              disabled={page <= 1}
+              onClick={() => goToPage(page - 1)}
+            >
               Previous
             </button>
             <span style={{ margin: '0 10px' }}>Page {page}</span>
             <button
+              className="button"
               disabled={page >= Math.ceil(result.count / limit)}
               onClick={() => goToPage(page + 1)}
             >
@@ -100,6 +113,7 @@ export default function SearchPage() {
       {name && (
         <div>
           <button
+            className="button"
             onClick={() =>
               navigate({ pathname: '/react-app/', search: location.search })
             }
