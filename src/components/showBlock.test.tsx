@@ -4,6 +4,7 @@ import { vi } from 'vitest';
 import { store } from '../app/store';
 import { Provider } from 'react-redux';
 import { toggleLike } from '../features/LikedSlice';
+import userEvent from '@testing-library/user-event';
 
 global.fetch = vi.fn();
 
@@ -115,8 +116,8 @@ describe('ShowScreen', () => {
       expect(screen.getByText(/bulbasaur/i)).toBeInTheDocument();
     });
 
-    //  const likeButton = screen.getByRole('img', { name: /color/i });
-    //  await userEvent.click(likeButton);
+    const likeButton = screen.getByRole('img', { name: /like button/i });
+    await userEvent.click(likeButton);
 
     expect(consoleSpy).toHaveBeenCalledWith(1);
   });
