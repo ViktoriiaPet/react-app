@@ -1,4 +1,8 @@
+
 import type { PokemonShort } from '../components/PokemonContext';
+import { pokemonApi } from './getDetailPokemon';
+import { store } from '../app/store';
+
 
 let cachedPokemonList: PokemonShort[] | null = null;
 
@@ -24,21 +28,18 @@ export async function getData(offset = 0, limit = 20) {
     };
   }
 
-  const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`;
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
-    }
+  const result = await store.dispatch(
+    pokemonApi.endpoints.getPokemonList.initiate({ offset, limit }, { subscribe: false })
+  );
 
-    const json = await response.json();
-    console.log(json);
-    return json;
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    } else {
-      console.error('Unknown error', error);
-    }
+  if ('data' in result && result.data) {
+    return {
+      count: result.data.count,
+      results: result.data.results,
+      next: result.data.next ?? null,
+      previous: result.data.previous ?? null,
+    };
+  } else {
+    throw new Error('Ошибка при загрузке данных');
   }
 }

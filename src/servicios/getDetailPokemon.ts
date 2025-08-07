@@ -1,19 +1,25 @@
-export async function getDetailPokemon(name: string) {
-  const url = `https://pokeapi.co/api/v2/pokemon/${name}`;
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
-    }
+import { createApi } from '@reduxjs/toolkit/query/react'
+import { fetchBaseQuery } from '@reduxjs/toolkit/query';
+import type { PokemonDetail } from '../pages/MasterScreen';
 
-    const json = await response.json();
-    console.log(json);
-    return json;
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    } else {
-      console.error('Unknown error', error);
-    }
-  }
-}
+export const pokemonApi = createApi({
+  reducerPath: 'pokemonApi',
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://pokeapi.co/api/v2/' }),
+  endpoints: (build) => ({
+    getPokemonByName: build.query<PokemonDetail, string>({
+      query: (name:string) => `pokemon/${name}`,
+    }),
+    getPokemonList: build.query< { 
+    count: number; 
+    next: string | null; 
+    previous: string | null; 
+    results: { name: string; url: string }[] 
+  }, 
+    { offset: number; limit: number }>({
+    query: ({ offset, limit }) => `pokemon?offset=${offset}&limit=${limit}`,
+}),
+  }),
+})
+
+export const { useGetPokemonByNameQuery, useGetPokemonListQuery } = pokemonApi
+

@@ -10,9 +10,9 @@ import {
 } from 'react-router-dom';
 import { getData } from '../servicios/getPokeList';
 
-type ResultType = PokemonData | PokeListResponse | null;
+export type ResultType = PokemonData | PokeListResponse | null;
 
-interface PokemonData {
+export interface PokemonData {
   name: string;
   id: number;
   weight: number;
@@ -21,12 +21,12 @@ interface PokemonData {
   };
 }
 
-interface PokemonShort {
+export interface PokemonShort {
   name: string;
   url: string;
 }
 
-interface PokeListResponse {
+export interface PokeListResponse {
   count: number;
   next: string | null;
   previous: string | null;

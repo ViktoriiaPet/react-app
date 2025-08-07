@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getDetailPokemon } from '../servicios/getDetailPokemon';
+import { useGetPokemonByNameQuery } from '../servicios/getDetailPokemon';
 
-interface PokemonDetail {
+export interface PokemonDetail {
   name: string;
   id: number;
   weight: number;
@@ -14,42 +13,27 @@ interface PokemonDetail {
 
 export function MasterPage() {
   const { name } = useParams();
-  const [isLoad, setIsLoad] = useState(false);
-  const [pokemon, setPokemon] = useState<PokemonDetail | null>(null);
-  useEffect(() => {
-    const fetchInitialData = async () => {
-      if (!name) return;
-      setIsLoad(true);
-      try {
-        const data = await getDetailPokemon(name);
-        setPokemon(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoad(false);
-      }
-    };
 
-    fetchInitialData();
-  }, [name]);
-  console.log(pokemon);
+  const { data, error, isLoading } = useGetPokemonByNameQuery(`${name}`)
+
+  console.log(data);
   return (
     <div>
       <h2>Pokemon detail screen</h2>
-      {isLoad && <p>Loading...</p>}
+      {isLoading && <p>Loading...</p>}
 
-      {!isLoad && pokemon && (
+      {!isLoading && data && (
         <div>
           <p>Name: {name}</p>
           <div>
             <p>Photo: </p>
-            <img src={pokemon.sprites.front_default} alt={pokemon.name} />
+            <img src={data.sprites.front_default} alt={data.name} />
           </div>
-          <p>Height: {pokemon.height}</p>
-          <p>Weight: {pokemon.weight}</p>
+          <p>Height: {data.height}</p>
+          <p>Weight: {data.weight}</p>
         </div>
       )}
-      {!isLoad && !pokemon && <p>No data found</p>}
+      {!isLoading && !data && <p>No data found</p>}
     </div>
   );
 }
