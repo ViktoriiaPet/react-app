@@ -1,7 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { fetchBaseQuery } from '@reduxjs/toolkit/query';
 import type { PokemonDetail } from '../pages/MasterScreen';
-import { useMemo } from 'react';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 export const pokemonApi = createApi({
@@ -24,7 +23,7 @@ export const pokemonApi = createApi({
     }),
     getAllPokemonList: build.query<
       { results: { name: string; url: string }[] },
-      void
+      undefined
     >({
       query: () => `pokemon?offset=0&limit=1300`,
     }),
@@ -55,6 +54,5 @@ export const {
 } = pokemonApi;
 
 export const useGetPokemonDetails = (names: string[]) => {
-  const results = names.map((name) => useGetPokemonByNameQuery(name));
-  return useMemo(() => results.map((result) => result.data), [results]);
+  return useGetPokemonBatchQuery(names);
 };

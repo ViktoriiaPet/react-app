@@ -18,7 +18,7 @@ const PokemonContext = createContext<{
 });
 
 export const PokemonProvider = ({ children }: Props) => {
-  const { data, isSuccess } = useGetAllPokemonListQuery();
+  const { data, isSuccess } = useGetAllPokemonListQuery(undefined);
 
   const allPokemon = isSuccess ? data?.results || null : null;
 

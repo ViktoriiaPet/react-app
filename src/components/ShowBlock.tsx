@@ -50,21 +50,21 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
     return result.results.map((p) => p.name);
   }, [result]);
 
-  const {
-    data: pokemonDetails,
-    isLoading,
-    error,
-  } = useGetPokemonBatchQuery(pokemonNames, { skip: !isListResponse(result) });
+  const { data: pokemonDetails, isLoading } = useGetPokemonBatchQuery(
+    pokemonNames,
+    { skip: !isListResponse(result) }
+  );
 
-  const detailedList = useMemo(() => {
-    if (!pokemonDetails) return [];
-    return pokemonDetails.map((detail) => ({
-      name: detail.name,
-      id: detail.id,
-      weight: detail.weight,
-      sprites: { front_default: detail.sprites.front_default },
-    }));
-  }, [pokemonDetails]);
+  const detailedList = useMemo(
+    () =>
+      pokemonDetails?.map((detail) => ({
+        name: detail.name,
+        id: detail.id,
+        weight: detail.weight,
+        sprites: { front_default: detail.sprites.front_default },
+      })) || [],
+    [pokemonDetails]
+  );
 
   const handleClickToLike = (id: number) => {
     if (selectPokemons.includes(id)) {
@@ -177,9 +177,6 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
 
   if (isLoading) {
     return <p>Loading images...</p>;
-  }
-  {
-    error && <p>Error with getting content</p>;
   }
 
   return (

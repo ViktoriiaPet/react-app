@@ -37,7 +37,7 @@ export function SearchingBlock({ onResult }: SearchingBlockProps) {
   const dispatch = useDispatch();
 
   const { data: allPokemonList, refetch: refetchAll } =
-    useGetAllPokemonListQuery();
+    useGetAllPokemonListQuery(undefined);
   const { refetch: refetchPaginated } = useGetPokemonListQuery({
     offset: 0,
     limit: 20,
