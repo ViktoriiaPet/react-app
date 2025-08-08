@@ -14,7 +14,7 @@ export interface PokemonDetail {
 export function MasterPage() {
   const { name } = useParams();
 
-  const { data, error, isLoading } = useGetPokemonByNameQuery(`${name}`)
+  const { data, error, isLoading } = useGetPokemonByNameQuery(`${name}`);
 
   console.log(data);
   return (
@@ -33,6 +33,7 @@ export function MasterPage() {
           <p>Weight: {data.weight}</p>
         </div>
       )}
+      {error && <p>error</p>}
       {!isLoading && !data && <p>No data found</p>}
     </div>
   );

@@ -8,7 +8,8 @@ import {
   useNavigate,
   useLocation,
 } from 'react-router-dom';
-import { getData } from '../servicios/getPokeList';
+import { useGetAllPokemonListQuery } from '../servicios/getDetailPokemon';
+import { useGetPokemonListQuery } from '../servicios/getDetailPokemon';
 
 export type ResultType = PokemonData | PokeListResponse | null;
 
@@ -44,14 +45,36 @@ export default function SearchPage() {
 
   const limit = 20;
   const offset = (page - 1) * limit;
+  const searchWord = localStorage.getItem('words')?.toLowerCase() || '';
+
+  const {
+    data: pageData,
+    isLoading: isPageLoading,
+    error: pageError,
+  } = useGetPokemonListQuery({ offset, limit }, { skip: !!searchWord });
+
+  const {
+    data: allData,
+    isLoading: isAllLoading,
+    error: allError,
+  } = useGetAllPokemonListQuery(undefined, { skip: !searchWord });
 
   useEffect(() => {
-    const load = async () => {
-      const data = await getData(offset, limit);
-      setResult(data);
-    };
-    load();
-  }, [offset]);
+    if (searchWord && allData) {
+      const filtered = allData.results.filter((p) =>
+        p.name.toLowerCase().includes(searchWord)
+      );
+      const paginated = filtered.slice(offset, offset + limit);
+      setResult({
+        count: filtered.length,
+        next: null,
+        previous: null,
+        results: paginated,
+      });
+    } else if (!searchWord && pageData) {
+      setResult(pageData);
+    }
+  }, [searchWord, allData, pageData, offset, limit]);
 
   const goToPage = (newPage: number) => {
     setSearchParams({ page: newPage.toString() });
@@ -66,6 +89,9 @@ export default function SearchPage() {
     const currentSearch = searchParams.toString();
     navigate(`${name}?${currentSearch}`);
   };
+
+  const isLoading = searchWord ? isAllLoading : isPageLoading;
+  const error = searchWord ? allError : pageError;
 
   return (
     <div style={{ display: 'flex' }}>
@@ -88,7 +114,11 @@ export default function SearchPage() {
 
         <SearchingBlock onResult={handleResult} />
 
-        <ShowScreen result={result} onPokemonClick={handlePokemonClick} />
+        <ShowScreen
+          result={result}
+          onPokemonClick={handlePokemonClick}
+          initialDetails={pageData?.results || []}
+        />
 
         {result && 'count' in result && result.count > limit && (
           <div>
@@ -135,6 +165,8 @@ export default function SearchPage() {
           </div>
         </div>
       )}
+      {error && <p>error</p>}
+      {isLoading && <p>Loading</p>}
     </div>
   );
 }

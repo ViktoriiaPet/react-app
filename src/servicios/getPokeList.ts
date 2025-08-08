@@ -1,8 +1,6 @@
-
 import type { PokemonShort } from '../components/PokemonContext';
 import { pokemonApi } from './getDetailPokemon';
 import { store } from '../app/store';
-
 
 let cachedPokemonList: PokemonShort[] | null = null;
 
@@ -29,7 +27,10 @@ export async function getData(offset = 0, limit = 20) {
   }
 
   const result = await store.dispatch(
-    pokemonApi.endpoints.getPokemonList.initiate({ offset, limit }, { subscribe: false })
+    pokemonApi.endpoints.getPokemonList.initiate(
+      { offset, limit },
+      { subscribe: false }
+    )
   );
 
   if ('data' in result && result.data) {

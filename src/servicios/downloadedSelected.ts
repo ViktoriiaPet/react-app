@@ -2,7 +2,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { pokemonApi } from './getDetailPokemon';
 import type { PokemonData } from '../components/ShowBlock';
 
-
 export const DownoladedSelectedPokemons = createAsyncThunk(
   'liked/downloadSelectedPokemons',
   async (ids: number[], { dispatch }) => {

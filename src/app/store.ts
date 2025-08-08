@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { likedSliceOnly } from '../features/LikedSlice';
 import { pokemonApi } from '../servicios/getDetailPokemon';
-import { setupListeners } from '@reduxjs/toolkit/query'
+import { setupListeners } from '@reduxjs/toolkit/query';
 
 export const store = configureStore({
   reducer: {
@@ -10,10 +10,10 @@ export const store = configureStore({
   },
 
   middleware: (getDefaultMiddleware) =>
-  getDefaultMiddleware().concat(pokemonApi.middleware),
+    getDefaultMiddleware().concat(pokemonApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-setupListeners(store.dispatch)
+setupListeners(store.dispatch);

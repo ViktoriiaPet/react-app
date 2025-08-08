@@ -1,6 +1,9 @@
-import { getData } from '../servicios/getPokeList';
 import { useState, useCallback, useEffect } from 'react';
 import { useLocalStorage } from '../servicios/useLocalStorage';
+import { useDispatch } from 'react-redux';
+import { pokemonApi } from '../servicios/getDetailPokemon';
+import { useGetAllPokemonListQuery } from '../servicios/getDetailPokemon';
+import { useGetPokemonListQuery } from '../servicios/getDetailPokemon';
 
 interface PokemonData {
   name: string;
@@ -31,7 +34,14 @@ export interface SearchingBlockProps {
 export function SearchingBlock({ onResult }: SearchingBlockProps) {
   const { setItem, getItem } = useLocalStorage('words');
   const [query, setQuery] = useState(() => getItem() || '');
-  const [, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const { data: allPokemonList, refetch: refetchAll } =
+    useGetAllPokemonListQuery();
+  const { refetch: refetchPaginated } = useGetPokemonListQuery({
+    offset: 0,
+    limit: 20,
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
@@ -39,36 +49,37 @@ export function SearchingBlock({ onResult }: SearchingBlockProps) {
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      setIsLoading(true);
       setItem(query.trim());
+      if (!allPokemonList) return;
 
-      try {
-        const data = await getData();
-        if (data) onResult(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
+      const filtered = allPokemonList.results.filter((p) =>
+        p.name.toLowerCase().includes(query.toLowerCase())
+      );
+      onResult({
+        count: filtered.length,
+        results: filtered.slice(0, 20),
+        next: null,
+        previous: null,
+      });
     },
-    [query, onResult]
+    [query, allPokemonList, onResult]
   );
+  const hadleResetCache = async () => {
+    dispatch(pokemonApi.util.resetApiState());
+    refetchAll();
+    refetchPaginated();
+  };
 
   useEffect(() => {
-    const fetchInitialData = async () => {
-      setIsLoading(true);
-      try {
-        const data = await getData();
-        if (data) onResult(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchInitialData();
-  }, []);
+    if (allPokemonList) {
+      onResult({
+        count: allPokemonList.results.length,
+        results: allPokemonList.results.slice(0, 20),
+        next: null,
+        previous: null,
+      });
+    }
+  }, [allPokemonList]);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -79,6 +90,9 @@ export function SearchingBlock({ onResult }: SearchingBlockProps) {
       ></input>
       <button type="submit" className="button">
         Search!
+      </button>
+      <button className="button" onClick={hadleResetCache}>
+        Reset Cache
       </button>
     </form>
   );
