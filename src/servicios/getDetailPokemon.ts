@@ -29,7 +29,7 @@ export const pokemonApi = createApi({
       query: () => `pokemon?offset=0&limit=1300`,
     }),
     getPokemonBatch: build.query<PokemonDetail[], string[]>({
-      async queryFn(names, _api, _extraOptions, fetchWithBQ) {
+      async queryFn(names, _api, _, fetchWithBQ) {
         const results = await Promise.all(
           names.map((name) => fetchWithBQ(`pokemon/${name}`))
         );
@@ -44,8 +44,8 @@ export const pokemonApi = createApi({
         };
       },
     }),
-    clearPokemonCache: build.mutation<void, number[]>({
-      queryFn: (ids, _api, _extraOptions) => {
+    clearPokemonCache: build.mutation<undefined, number[]>({
+      queryFn: (ids, _api) => {
         ids.forEach((id) => {
           _api.dispatch(
             pokemonApi.util.updateQueryData(

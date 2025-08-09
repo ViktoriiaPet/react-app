@@ -92,6 +92,7 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
   if (isListResponse(result)) {
     return (
       <div className="granPantalla">
+        {isError && <div className="error-message">Error loading pokemons</div>}
         <div className="showPantalla">
           <h2>Pokémon list</h2>
           <ul
@@ -172,12 +173,6 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
           </div>
         )}
       </div>
-    );
-  }
-
-  {
-    isError && (
-      <div className="error-message">Error loading selected pokemons</div>
     );
   }
 

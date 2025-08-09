@@ -25,9 +25,9 @@ const mockData = {
 };
 
 describe('SearchPage', () => {
-  /*beforeEach(() => {
+  beforeEach(() => {
     vi.spyOn(getPokeListModule, 'getData').mockResolvedValue(mockData);
-  });*/
+  });
 
   afterEach(() => {
     vi.restoreAllMocks();
