@@ -16,17 +16,13 @@ export const likedSliceOnly = createSlice({
         return [...state, id];
       }
     },
-    getAllLikedPokemons: (state) => {
-      console.log(state);
-    },
     deleteAllLikedPokemons: () => {
       return initialState;
     },
   },
 });
 
-export const { toggleLike, getAllLikedPokemons, deleteAllLikedPokemons } =
-  likedSliceOnly.actions;
+export const { toggleLike, deleteAllLikedPokemons } = likedSliceOnly.actions;
 export default likedSliceOnly.reducer;
 
 export const selectLikedIds = (state: RootState) => state.liked;

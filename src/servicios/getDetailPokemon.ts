@@ -5,6 +5,7 @@ import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 export const pokemonApi = createApi({
   reducerPath: 'pokemonApi',
+  tagTypes: ['Pokemon'],
   baseQuery: fetchBaseQuery({ baseUrl: 'https://pokeapi.co/api/v2/' }),
   endpoints: (build) => ({
     getPokemonByName: build.query<PokemonDetail, string>({
@@ -43,6 +44,22 @@ export const pokemonApi = createApi({
         };
       },
     }),
+    clearPokemonCache: build.mutation<void, number[]>({
+      queryFn: (ids, _api, _extraOptions) => {
+        ids.forEach((id) => {
+          _api.dispatch(
+            pokemonApi.util.updateQueryData(
+              'getPokemonByName',
+              id.toString(),
+              () => {
+                throw new Error('Cache cleared');
+              }
+            )
+          );
+        });
+        return { data: undefined };
+      },
+    }),
   }),
 });
 
@@ -51,6 +68,7 @@ export const {
   useGetPokemonListQuery,
   useGetAllPokemonListQuery,
   useGetPokemonBatchQuery,
+  useClearPokemonCacheMutation,
 } = pokemonApi;
 
 export const useGetPokemonDetails = (names: string[]) => {

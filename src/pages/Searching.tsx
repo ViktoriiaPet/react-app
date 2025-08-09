@@ -91,7 +91,6 @@ export default function SearchPage() {
   };
 
   const isLoading = searchWord ? isAllLoading : isPageLoading;
-  const error = searchWord ? allError : pageError;
 
   return (
     <div style={{ display: 'flex' }}>
@@ -111,7 +110,7 @@ export default function SearchPage() {
           You can try to enter names of pokemons (for example &quot;ditto&quot;,
           &quot;raichu&quot;, &quot;pikachu&quot;)
         </h3>
-
+        {isLoading && <div className="load">Loading...</div>}
         <SearchingBlock onResult={handleResult} />
 
         <ShowScreen
@@ -165,8 +164,12 @@ export default function SearchPage() {
           </div>
         </div>
       )}
-      {error && <p>error</p>}
-      {isLoading && <p>Loading</p>}
+      {allError && (
+        <div className="error-message">Error loading all pokemons</div>
+      )}
+      {pageError && (
+        <div className="error-message">Error with getting page</div>
+      )}
     </div>
   );
 }

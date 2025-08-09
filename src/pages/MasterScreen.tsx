@@ -14,14 +14,13 @@ export interface PokemonDetail {
 export function MasterPage() {
   const { name } = useParams();
 
-  const { data, error, isLoading } = useGetPokemonByNameQuery(`${name}`);
+  const { data, isError, isLoading } = useGetPokemonByNameQuery(`${name}`);
 
   console.log(data);
   return (
     <div>
       <h2>Pokemon detail screen</h2>
-      {isLoading && <p>Loading...</p>}
-
+      {isLoading && <div className="load">Loading...</div>}
       {!isLoading && data && (
         <div>
           <p>Name: {name}</p>
@@ -33,7 +32,9 @@ export function MasterPage() {
           <p>Weight: {data.weight}</p>
         </div>
       )}
-      {error && <p>error</p>}
+      {isError && (
+        <div className="error-message">Error loading selected pokemons</div>
+      )}
       {!isLoading && !data && <p>No data found</p>}
     </div>
   );

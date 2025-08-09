@@ -57,3 +57,11 @@ function generateCSV(data: PokemonData[]) {
 
   return [headers.join(','), ...rows].join('\r\n');
 }
+
+export const resetPokemonCacheCompletely = createAsyncThunk(
+  'pokemon/resetCache',
+  async (_, { dispatch }) => {
+    dispatch(pokemonApi.util.invalidateTags(['Pokemon']));
+    dispatch(pokemonApi.util.resetApiState());
+  }
+);

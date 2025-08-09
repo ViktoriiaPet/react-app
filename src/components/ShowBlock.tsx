@@ -50,10 +50,11 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
     return result.results.map((p) => p.name);
   }, [result]);
 
-  const { data: pokemonDetails, isLoading } = useGetPokemonBatchQuery(
-    pokemonNames,
-    { skip: !isListResponse(result) }
-  );
+  const {
+    data: pokemonDetails,
+    isLoading,
+    isError,
+  } = useGetPokemonBatchQuery(pokemonNames, { skip: !isListResponse(result) });
 
   const detailedList = useMemo(
     () =>
@@ -100,8 +101,7 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
               gap: '2vw',
             }}
           >
-            {isLoading && <p>Loading...</p>}
-
+            {isLoading && <div className="load">Loading...</div>}
             {detailedList.map((pokemon) => (
               <li
                 key={pokemon.id}
@@ -175,8 +175,10 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
     );
   }
 
-  if (isLoading) {
-    return <p>Loading images...</p>;
+  {
+    isError && (
+      <div className="error-message">Error loading selected pokemons</div>
+    );
   }
 
   return (

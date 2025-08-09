@@ -4,6 +4,8 @@ import { useDispatch } from 'react-redux';
 import { pokemonApi } from '../servicios/getDetailPokemon';
 import { useGetAllPokemonListQuery } from '../servicios/getDetailPokemon';
 import { useGetPokemonListQuery } from '../servicios/getDetailPokemon';
+import { resetPokemonCacheCompletely } from '../servicios/downloadedSelected';
+import { deleteAllLikedPokemons } from '../features/LikedSlice';
 
 interface PokemonData {
   name: string;
@@ -36,9 +38,18 @@ export function SearchingBlock({ onResult }: SearchingBlockProps) {
   const [query, setQuery] = useState(() => getItem() || '');
   const dispatch = useDispatch();
 
-  const { data: allPokemonList, refetch: refetchAll } =
-    useGetAllPokemonListQuery(undefined);
-  const { refetch: refetchPaginated } = useGetPokemonListQuery({
+  const {
+    data: allPokemonList,
+    refetch: refetchAll,
+    isError: allPokemonError,
+    isError: isAllPokemonError,
+    isLoading,
+  } = useGetAllPokemonListQuery(undefined);
+  const {
+    refetch: refetchPaginated,
+    error: paginatedError,
+    isError: isPaginatedError,
+  } = useGetPokemonListQuery({
     offset: 0,
     limit: 20,
   });
@@ -66,6 +77,8 @@ export function SearchingBlock({ onResult }: SearchingBlockProps) {
   );
   const hadleResetCache = async () => {
     dispatch(pokemonApi.util.resetApiState());
+    resetPokemonCacheCompletely();
+    dispatch(deleteAllLikedPokemons());
     refetchAll();
     refetchPaginated();
   };
@@ -83,6 +96,7 @@ export function SearchingBlock({ onResult }: SearchingBlockProps) {
 
   return (
     <form onSubmit={handleSubmit}>
+      {isLoading && <div className="load">Loading...</div>}
       <input
         placeholder="Please, enter..."
         value={query}
@@ -94,6 +108,16 @@ export function SearchingBlock({ onResult }: SearchingBlockProps) {
       <button className="button" onClick={hadleResetCache}>
         Reset Cache
       </button>
+      {isAllPokemonError && (
+        <div className="error-message">
+          Error loading all pokemons: {JSON.stringify(allPokemonError)}
+        </div>
+      )}
+      {isPaginatedError && (
+        <div className="error-message">
+          Error loading paginated: {JSON.stringify(paginatedError)}
+        </div>
+      )}
     </form>
   );
 }
