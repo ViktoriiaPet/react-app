@@ -6,7 +6,36 @@ import { Provider } from 'react-redux';
 import { toggleLike } from '../features/LikedSlice';
 import userEvent from '@testing-library/user-event';
 
-global.fetch = vi.fn();
+import * as pokemonApi from '../servicios/getDetailPokemon';
+
+vi.mock('../servicios/getDetailPokemon', async () => {
+  const actual = await vi.importActual('../servicios/getDetailPokemon');
+  return {
+    ...(actual as object),
+    useGetPokemonBatchQuery: vi.fn(),
+  };
+});
+
+beforeEach(() => {
+  (pokemonApi.useGetPokemonBatchQuery as jest.Mock).mockImplementation(
+    (options) => {
+      if (options?.skip) {
+        return {
+          data: undefined,
+          isLoading: false,
+          isError: false,
+          refetch: () => {},
+        };
+      }
+      return {
+        data: undefined,
+        isLoading: false,
+        isError: false,
+        refetch: () => {},
+      };
+    }
+  );
+});
 
 describe('ShowScreen', () => {
   afterEach(() => {
@@ -33,17 +62,22 @@ describe('ShowScreen', () => {
       ],
     };
 
-    const fakeDetail = {
-      id: 1,
-      name: 'bulbasaur',
-      weight: 69,
-      sprites: {
-        front_default: 'bulba.png',
+    const fakeDetails = [
+      {
+        id: 1,
+        name: 'bulbasaur',
+        weight: 69,
+        sprites: {
+          front_default: 'bulba.png',
+        },
       },
-    };
+    ];
 
-    (fetch as jest.Mock).mockResolvedValue({
-      json: () => Promise.resolve(fakeDetail),
+    (pokemonApi.useGetPokemonBatchQuery as jest.Mock).mockReturnValue({
+      data: fakeDetails,
+      isLoading: false,
+      isError: false,
+      refetch: () => {},
     });
 
     render(
@@ -52,7 +86,7 @@ describe('ShowScreen', () => {
       </Provider>
     );
 
-    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.getByText(/bulbasaur/i)).toBeInTheDocument();
@@ -61,6 +95,32 @@ describe('ShowScreen', () => {
         'bulba.png'
       );
     });
+  });
+
+  it('renders loading state when fetching', () => {
+    (pokemonApi.useGetPokemonBatchQuery as jest.Mock).mockReturnValue({
+      data: undefined,
+      isLoading: true,
+      isError: false,
+      refetch: () => {},
+    });
+
+    const fakeList = {
+      count: 1,
+      next: null,
+      previous: null,
+      results: [
+        { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' },
+      ],
+    };
+
+    render(
+      <Provider store={store}>
+        <ShowScreen result={fakeList} />
+      </Provider>
+    );
+
+    expect(screen.getByText(/loading/i)).toBeInTheDocument();
   });
 
   it('renders "No data available" if result is not a list and not null', () => {
@@ -89,17 +149,22 @@ describe('ShowScreen', () => {
       ],
     };
 
-    const fakeDetail = {
-      id: 1,
-      name: 'bulbasaur',
-      weight: 69,
-      sprites: {
-        front_default: 'bulba.png',
+    const fakeDetails = [
+      {
+        id: 1,
+        name: 'bulbasaur',
+        weight: 69,
+        sprites: {
+          front_default: 'bulba.png',
+        },
       },
-    };
+    ];
 
-    (fetch as jest.Mock).mockResolvedValue({
-      json: () => Promise.resolve(fakeDetail),
+    (pokemonApi.useGetPokemonBatchQuery as jest.Mock).mockReturnValue({
+      data: fakeDetails,
+      isLoading: false,
+      isError: false,
+      refetch: () => {},
     });
 
     store.dispatch(toggleLike(1));

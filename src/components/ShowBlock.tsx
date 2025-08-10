@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import lleno from '../assets/corazon-lleno.png';
 import vacio from '../assets/corazón-vacío.png';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,6 +6,7 @@ import { selectLikedIds } from '../features/LikedSlice';
 import { toggleLike, deleteAllLikedPokemons } from '../features/LikedSlice';
 import { DownoladedSelectedPokemons } from '../servicios/downloadedSelected';
 import type { AppDispatch } from '../app/store';
+import { useGetPokemonBatchQuery } from '../servicios/getDetailPokemon';
 
 export interface PokemonData {
   name: string;
@@ -31,13 +32,12 @@ interface PokeListResponse {
 interface ShowScreenProps {
   result: ResultType;
   onPokemonClick?: (name: string) => void;
+  initialDetails?: PokemonShort[];
 }
 
 type ResultType = PokemonData | PokeListResponse | null;
 
 export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
-  const [detailedList, setDetailedList] = useState<PokemonData[]>([]);
-  const [loading, setLoading] = useState(false);
   const selectPokemons = useSelector(selectLikedIds);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -45,22 +45,27 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
     return res !== null && 'results' in res && Array.isArray(res.results);
   };
 
-  useEffect(() => {
-    if (isListResponse(result)) {
-      setLoading(true);
-      Promise.all(
-        result.results.map(async (p) => {
-          const res = await fetch(p.url);
-          return (await res.json()) as PokemonData;
-        })
-      )
-        .then((data) => {
-          setDetailedList(data);
-          setLoading(false);
-        })
-        .catch(() => setLoading(false));
-    }
+  const pokemonNames = useMemo(() => {
+    if (!isListResponse(result)) return [];
+    return result.results.map((p) => p.name);
   }, [result]);
+
+  const {
+    data: pokemonDetails,
+    isLoading,
+    isError,
+  } = useGetPokemonBatchQuery(pokemonNames, { skip: !isListResponse(result) });
+
+  const detailedList = useMemo(
+    () =>
+      pokemonDetails?.map((detail) => ({
+        name: detail.name,
+        id: detail.id,
+        weight: detail.weight,
+        sprites: { front_default: detail.sprites.front_default },
+      })) || [],
+    [pokemonDetails]
+  );
 
   const handleClickToLike = (id: number) => {
     if (selectPokemons.includes(id)) {
@@ -87,6 +92,7 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
   if (isListResponse(result)) {
     return (
       <div className="granPantalla">
+        {isError && <div className="error-message">Error loading pokemons</div>}
         <div className="showPantalla">
           <h2>Pokémon list</h2>
           <ul
@@ -96,8 +102,7 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
               gap: '2vw',
             }}
           >
-            {loading && <p>Loading...</p>}
-
+            {isLoading && <div className="load">Loading...</div>}
             {detailedList.map((pokemon) => (
               <li
                 key={pokemon.id}
@@ -169,10 +174,6 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
         )}
       </div>
     );
-  }
-
-  if (loading) {
-    return <p>Loading images...</p>;
   }
 
   return (

@@ -140,3 +140,25 @@ body.dark .color {
 body.light .color {
   background-color: #e3d3d39c;
 }
+.load {
+  position: fixed;
+  top: 35%;
+  width: 15vh;
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #c5a7a7bd;
+}
+.error-message {
+  position: fixed;
+  top: 35%;
+  width: 15vh;
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #b97171bd;
+}

@@ -8,11 +8,12 @@ import {
   useNavigate,
   useLocation,
 } from 'react-router-dom';
-import { getData } from '../servicios/getPokeList';
+import { useGetAllPokemonListQuery } from '../servicios/getDetailPokemon';
+import { useGetPokemonListQuery } from '../servicios/getDetailPokemon';
 
-type ResultType = PokemonData | PokeListResponse | null;
+export type ResultType = PokemonData | PokeListResponse | null;
 
-interface PokemonData {
+export interface PokemonData {
   name: string;
   id: number;
   weight: number;
@@ -21,12 +22,12 @@ interface PokemonData {
   };
 }
 
-interface PokemonShort {
+export interface PokemonShort {
   name: string;
   url: string;
 }
 
-interface PokeListResponse {
+export interface PokeListResponse {
   count: number;
   next: string | null;
   previous: string | null;
@@ -44,14 +45,36 @@ export default function SearchPage() {
 
   const limit = 20;
   const offset = (page - 1) * limit;
+  const searchWord = localStorage.getItem('words')?.toLowerCase() || '';
+
+  const {
+    data: pageData,
+    isLoading: isPageLoading,
+    error: pageError,
+  } = useGetPokemonListQuery({ offset, limit }, { skip: !!searchWord });
+
+  const {
+    data: allData,
+    isLoading: isAllLoading,
+    error: allError,
+  } = useGetAllPokemonListQuery(undefined, { skip: !searchWord });
 
   useEffect(() => {
-    const load = async () => {
-      const data = await getData(offset, limit);
-      setResult(data);
-    };
-    load();
-  }, [offset]);
+    if (searchWord && allData) {
+      const filtered = allData.results.filter((p) =>
+        p.name.toLowerCase().includes(searchWord)
+      );
+      const paginated = filtered.slice(offset, offset + limit);
+      setResult({
+        count: filtered.length,
+        next: null,
+        previous: null,
+        results: paginated,
+      });
+    } else if (!searchWord && pageData) {
+      setResult(pageData);
+    }
+  }, [searchWord, allData, pageData, offset, limit]);
 
   const goToPage = (newPage: number) => {
     setSearchParams({ page: newPage.toString() });
@@ -66,6 +89,8 @@ export default function SearchPage() {
     const currentSearch = searchParams.toString();
     navigate(`${name}?${currentSearch}`);
   };
+
+  const isLoading = searchWord ? isAllLoading : isPageLoading;
 
   return (
     <div style={{ display: 'flex' }}>
@@ -85,10 +110,14 @@ export default function SearchPage() {
           You can try to enter names of pokemons (for example &quot;ditto&quot;,
           &quot;raichu&quot;, &quot;pikachu&quot;)
         </h3>
-
+        {isLoading && <div className="load">Loading...</div>}
         <SearchingBlock onResult={handleResult} />
 
-        <ShowScreen result={result} onPokemonClick={handlePokemonClick} />
+        <ShowScreen
+          result={result}
+          onPokemonClick={handlePokemonClick}
+          initialDetails={pageData?.results || []}
+        />
 
         {result && 'count' in result && result.count > limit && (
           <div>
@@ -134,6 +163,12 @@ export default function SearchPage() {
             <Outlet />
           </div>
         </div>
+      )}
+      {allError && (
+        <div className="error-message">Error loading all pokemons</div>
+      )}
+      {pageError && (
+        <div className="error-message">Error with getting page</div>
       )}
     </div>
   );
