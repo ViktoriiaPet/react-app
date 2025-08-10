@@ -21,11 +21,12 @@ export const DownoladedSelectedPokemons = createAsyncThunk(
 
     const csv = generateCSV(results);
     downloadCSV(csv, results.length);
+    console.log('Results before return:', results);
     return results;
   }
 );
 
-function downloadCSV(csvContent: string, count: number) {
+export function downloadCSV(csvContent: string, count: number) {
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
