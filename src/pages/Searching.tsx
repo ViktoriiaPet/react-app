@@ -1,15 +1,12 @@
+'use client';
 import { useState, useEffect } from 'react';
 import { SearchingBlock } from '../components/SearchBlock';
 import { ShowScreen } from '../components/ShowBlock';
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import {
-  useSearchParams,
-  Outlet,
-  useParams,
-  useNavigate,
-  useLocation,
-} from 'react-router-dom';
-import { useGetAllPokemonListQuery } from '../servicios/getDetailPokemon';
-import { useGetPokemonListQuery } from '../servicios/getDetailPokemon';
+  useGetAllPokemonListQuery,
+  useGetPokemonListQuery,
+} from '../servicios/getDetailPokemon';
 
 export type ResultType = PokemonData | PokeListResponse | null;
 
@@ -17,9 +14,7 @@ export interface PokemonData {
   name: string;
   id: number;
   weight: number;
-  sprites: {
-    front_default: string;
-  };
+  sprites: { front_default: string };
 }
 
 export interface PokemonShort {
@@ -36,16 +31,20 @@ export interface PokeListResponse {
 
 export default function SearchPage() {
   const [result, setResult] = useState<ResultType>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const page = Number(searchParams.get('page') || '1');
-  const { name } = useParams();
 
-  const navigate = useNavigate();
-  const location = useLocation();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const page = Number(searchParams?.get('page') ?? '1');
 
   const limit = 20;
   const offset = (page - 1) * limit;
-  const searchWord = localStorage.getItem('words')?.toLowerCase() || '';
+  const searchWord =
+    (typeof window !== 'undefined'
+      ? localStorage.getItem('words')
+      : ''
+    )?.toLowerCase() || '';
 
   const {
     data: pageData,
@@ -77,17 +76,24 @@ export default function SearchPage() {
   }, [searchWord, allData, pageData, offset, limit]);
 
   const goToPage = (newPage: number) => {
-    setSearchParams({ page: newPage.toString() });
+    const params = new URLSearchParams(searchParams?.toString());
+    params.set('page', String(newPage));
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   const handleResult = (data: ResultType) => {
-    setSearchParams({ page: '1' });
+    const params = new URLSearchParams();
+    params.set('page', '1');
+    router.push(`${pathname}?${params.toString()}`);
     setResult(data);
   };
 
-  const handlePokemonClick = (name: string) => {
-    const currentSearch = searchParams.toString();
-    navigate(`${name}?${currentSearch}`);
+  const handlePokemonClick = (pokemonName: string) => {
+    const params = new URLSearchParams(searchParams?.toString());
+    const href = `/search/${encodeURIComponent(pokemonName)}?${params.toString()}`;
+    console.log('pokemonName type:', typeof pokemonName, pokemonName);
+    console.log(href);
+    router.push(href);
   };
 
   const isLoading = searchWord ? isAllLoading : isPageLoading;
@@ -110,7 +116,9 @@ export default function SearchPage() {
           You can try to enter names of pokemons (for example &quot;ditto&quot;,
           &quot;raichu&quot;, &quot;pikachu&quot;)
         </h3>
+
         {isLoading && <div className="load">Loading...</div>}
+
         <SearchingBlock onResult={handleResult} />
 
         <ShowScreen
@@ -139,31 +147,7 @@ export default function SearchPage() {
           </div>
         )}
       </div>
-      {name && (
-        <div>
-          <button
-            className="button"
-            onClick={() =>
-              navigate({ pathname: '/react-app/', search: location.search })
-            }
-            style={{
-              marginLeft: '50%',
-            }}
-          >
-            Close Detail Page
-          </button>
-          <div
-            style={{
-              flex: 1,
-              borderLeft: '1px solid #ccc',
-              padding: '1rem',
-              marginLeft: '1rem',
-            }}
-          >
-            <Outlet />
-          </div>
-        </div>
-      )}
+
       {allError && (
         <div className="error-message">Error loading all pokemons</div>
       )}

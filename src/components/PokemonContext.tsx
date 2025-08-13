@@ -1,3 +1,4 @@
+'use client';
 import { createContext } from 'react';
 import type { ReactNode } from 'react';
 import { useGetAllPokemonListQuery } from '../servicios/getDetailPokemon';

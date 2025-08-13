@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import App from './App';
-import { store } from './app/store';
+import { store } from './app-hook/store';
 import { Provider } from 'react-redux';
 
 describe('App routing and layout', () => {

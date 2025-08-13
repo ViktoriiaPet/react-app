@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import SearchPage from './Searching';
 import { vi, beforeEach, afterEach, describe, it } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { store } from '../app/store';
+import { store } from '../app-hook/store';
 import { Provider } from 'react-redux';
 import type { Mock } from 'vitest';
 import {

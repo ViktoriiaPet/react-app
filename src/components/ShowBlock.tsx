@@ -1,3 +1,4 @@
+'use client';
 import { useMemo } from 'react';
 import lleno from '../assets/corazon-lleno.png';
 import vacio from '../assets/corazón-vacío.png';
@@ -5,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectLikedIds } from '../features/LikedSlice';
 import { toggleLike, deleteAllLikedPokemons } from '../features/LikedSlice';
 import { DownoladedSelectedPokemons } from '../servicios/downloadedSelected';
-import type { AppDispatch } from '../app/store';
+import type { AppDispatch } from '../app-hook/store';
 import { useGetPokemonBatchQuery } from '../servicios/getDetailPokemon';
 
 export interface PokemonData {

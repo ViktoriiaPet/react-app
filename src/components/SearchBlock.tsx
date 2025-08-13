@@ -1,3 +1,4 @@
+'use client';
 import { useState, useCallback, useEffect } from 'react';
 import { useLocalStorage } from '../servicios/useLocalStorage';
 import { useDispatch } from 'react-redux';
