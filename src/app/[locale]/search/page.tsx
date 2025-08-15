@@ -1,12 +1,13 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { SearchingBlock } from '../components/SearchBlock';
-import { ShowScreen } from '../components/ShowBlock';
+import { SearchingBlock } from '../../../components/SearchBlock';
+import { ShowScreen } from '../../../components/ShowBlock';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import {
   useGetAllPokemonListQuery,
   useGetPokemonListQuery,
-} from '../servicios/getDetailPokemon';
+} from '../../../servicios/getDetailPokemon';
+import { useTranslations } from 'next-intl';
 
 export type ResultType = PokemonData | PokeListResponse | null;
 
@@ -28,8 +29,8 @@ export interface PokeListResponse {
   previous: string | null;
   results: PokemonShort[];
 }
-
-export default function SearchPage() {
+export default function Page() {
+  const t = useTranslations();
   const [result, setResult] = useState<ResultType>(null);
 
   const searchParams = useSearchParams();
@@ -89,8 +90,14 @@ export default function SearchPage() {
   };
 
   const handlePokemonClick = (pokemonName: string) => {
+    const pathnameParts = pathname?.split('/');
+    let locale;
+    if (pathnameParts) {
+      locale = pathnameParts[1] || 'en';
+    }
+
     const params = new URLSearchParams(searchParams?.toString());
-    const href = `/search/${encodeURIComponent(pokemonName)}?${params.toString()}`;
+    const href = `/${locale}/search/${encodeURIComponent(pokemonName)}?${params.toString()}`;
     console.log('pokemonName type:', typeof pokemonName, pokemonName);
     console.log(href);
     router.push(href);
@@ -111,7 +118,7 @@ export default function SearchPage() {
           flexDirection: 'column',
         }}
       >
-        <h1>Welcome to the Main &apos;Pokemon&apos; page!</h1>
+        <h1> {t('searchTitle')} </h1>
         <h3>
           You can try to enter names of pokemons (for example &quot;ditto&quot;,
           &quot;raichu&quot;, &quot;pikachu&quot;)

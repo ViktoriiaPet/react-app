@@ -8,6 +8,7 @@ import { ThemeButton } from '../components/ButtonsTheme';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import Link from 'next/link';
 import '../index.css';
+import { HeaderLangSwitcher } from '../components/bottonChangeLanduage';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <Link href="/about" className="button">
                 About
               </Link>
+              <HeaderLangSwitcher />
               <ThemeButton />
             </header>
             {children}

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { DownoladedSelectedPokemons } from './downloadedSelected';
-import type { PokemonDetail } from '../app/search/[name]/MasterScreen';
+import type { PokemonDetail } from '../app/[locale]/search/[name]/MasterScreen';
 
 vi.mock('./downloadedSelected', async (importOriginal) => {
   const mod = await importOriginal<typeof import('./downloadedSelected')>();

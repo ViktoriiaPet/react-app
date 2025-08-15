@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { fetchBaseQuery } from '@reduxjs/toolkit/query';
-import type { PokemonDetail } from '../app/search/[name]/MasterScreen';
+import type { PokemonDetail } from '../app/[locale]/search/[name]/MasterScreen';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 export const pokemonApi = createApi({

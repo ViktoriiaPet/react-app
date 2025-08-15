@@ -1,5 +1,5 @@
 'use client';
-import { useGetPokemonByNameQuery } from '../../../servicios/getDetailPokemon';
+import { useGetPokemonByNameQuery } from '../../../../servicios/getDetailPokemon';
 
 export interface PokemonDetail {
   name: string;

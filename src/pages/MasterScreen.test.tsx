@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { MasterPage } from '../app/search/[name]/MasterScreen';
-import type { PokemonDetail } from '../app/search/[name]/MasterScreen';
+import { MasterPage } from '../app/[locale]/search/[name]/MasterScreen';
+import type { PokemonDetail } from '../app/[locale]/search/[name]/MasterScreen';
 import * as service from '../servicios/getDetailPokemon';
 import { vi } from 'vitest';
 
