@@ -8,7 +8,8 @@ export const HeaderLangSwitcher = () => {
   const router = useRouter();
 
   const handleChangeLocale = (newLocale: string) => {
-    const parts = pathname!.split('/');
+    if (!pathname) return;
+    const parts = pathname.split('/');
     if (!locales.some((l) => l.code === parts[1])) {
       parts.splice(1, 0, newLocale);
     } else {
