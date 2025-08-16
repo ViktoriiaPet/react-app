@@ -8,6 +8,8 @@ import {
   useGetPokemonListQuery,
 } from '../../../servicios/getDetailPokemon';
 import { useTranslations } from 'next-intl';
+import { getPokemons } from '../../lib/getData';
+import { pokemonApi } from '../../../servicios/getDetailPokemon';
 
 export type ResultType = PokemonData | PokeListResponse | null;
 
@@ -36,6 +38,23 @@ export default function Page() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() => {
+    async function fetchInitial() {
+      const serverData = await getPokemons(0, 20);
+      setResult(serverData);
+
+      pokemonApi.util.updateQueryData(
+        'getPokemonList',
+        { offset: 0, limit: 20 },
+        (draft) => {
+          Object.assign(draft, serverData);
+        }
+      );
+    }
+
+    fetchInitial();
+  }, []);
 
   const page = Number(searchParams?.get('page') ?? '1');
 

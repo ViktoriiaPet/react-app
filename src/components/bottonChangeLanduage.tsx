@@ -37,7 +37,7 @@ export const HeaderLangSwitcher = () => {
         gap: '1vw',
       }}
     >
-      <button onClick={handleChangeLocale}>
+      <button className="button" onClick={handleChangeLocale}>
         {locales.find((l) => l.code === nextLocale)?.label}
       </button>
     </div>
