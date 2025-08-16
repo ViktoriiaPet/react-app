@@ -1,4 +1,4 @@
-import { AboutPage } from '../app/about/page';
+import { AboutPage } from '../app/[locale]/about/page';
 import { render, screen } from '@testing-library/react';
 
 describe('AboutPage', () => {

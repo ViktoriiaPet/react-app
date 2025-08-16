@@ -9,6 +9,7 @@ import {
 } from '../../../servicios/getDetailPokemon';
 import { useTranslations } from 'next-intl';
 
+
 export type ResultType = PokemonData | PokeListResponse | null;
 
 export interface PokemonData {

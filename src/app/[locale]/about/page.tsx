@@ -1,18 +1,22 @@
-import photo from '../assets/photo_2025-07-26_16-06-02.jpg';
 
-export function AboutPage() {
+import Image from "next/image";
+
+export default function AboutPage() {
   return (
     <div>
       <h2>About the author</h2>
-      <img
-        src={photo}
-        alt="Photo of author"
-        style={{
-          height: '16vw',
+      <div style={{
+        position: 'relative',
+        height: '16vw',
           width: '22vw',
           paddingLeft: '40%',
-        }}
-      ></img>
+      }}>
+      <Image
+    src="/photo_2025-07-26_16-06-02.jpg"
+    alt="My photo"
+    fill
+    style={{ objectFit: "contain" }}
+  /></div>
       <div
         style={{
           padding: '2vw',

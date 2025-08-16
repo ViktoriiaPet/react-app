@@ -8,6 +8,7 @@ import { toggleLike, deleteAllLikedPokemons } from '../features/LikedSlice';
 import { DownoladedSelectedPokemons } from '../servicios/downloadedSelected';
 import type { AppDispatch } from '../app-hook/store';
 import { useGetPokemonBatchQuery } from '../servicios/getDetailPokemon';
+import Image from "next/image";
 
 export interface PokemonData {
   name: string;
@@ -135,9 +136,26 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
                 </div>
                 <div onClick={() => handleClickToLike(pokemon.id)}>
                   {selectPokemons.includes(pokemon.id) ? (
-                    <img src={`${vacio}`} className="color" alt="like button" />
+                    
+                    <div style={{ position: 'relative', width: '2vw', height: '2vw', borderRadius: '16px', padding: '0.2vw' }}
+                      >
+                       <Image
+                      src="/vacio.png"
+                      alt="empty heart"
+                      fill
+                      style={{ objectFit: "contain" }}
+                        />
+                    </div>
                   ) : (
-                    <img src={`${lleno}`} className="color" alt="like button" />
+                   <div style={{ position: 'relative', width: '2vw', height: '2vw', borderRadius: '16px', padding: '0.2vw' }}
+                      >
+                       <Image
+                      src="/lleno.png"
+                      alt="lleno heart"
+                      fill
+                      style={{ objectFit: "contain" }}
+                        />
+                    </div>
                   )}
                 </div>
               </li>
