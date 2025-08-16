@@ -1,11 +1,8 @@
-'use client'
+'use client';
 import { ReactNode } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
-import { notFound } from 'next/navigation';
-import { useState, useEffect } from 'react';
 import en from '../../messages/en.json';
 import es from '../../messages/es.json';
-
 
 export interface LocaleLayoutProps {
   children: ReactNode;
@@ -20,9 +17,7 @@ export default function LocaleLayout({ children, params }: LocaleLayoutProps) {
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-       <div style={{ minHeight: '100vh', overflowY: 'auto' }}>
-      {children}
-      </div>
+      <div style={{ minHeight: '100vh', overflowY: 'auto' }}>{children}</div>
     </NextIntlClientProvider>
   );
 }

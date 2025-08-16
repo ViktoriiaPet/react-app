@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <ThemeProvider>
           <ErrorBoundary>
             <header>
-              <Link href="/" className="button">
+              <Link href={`/${locale}/search?page=1`} className="button">
                 Home
               </Link>
               <Link href={`/${locale}/about`} className="button">
