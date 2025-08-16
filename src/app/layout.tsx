@@ -9,8 +9,10 @@ import { ErrorBoundary } from '../components/ErrorBoundary';
 import Link from 'next/link';
 import '../index.css';
 import { HeaderLangSwitcher } from '../components/bottonChangeLanduage';
+import { useParams } from 'next/navigation';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+  const { locale } = useParams() || { locale: 'en' };
   return (
     <Provider store={store}>
       <PokemonProvider>
@@ -20,7 +22,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <Link href="/" className="button">
                 Home
               </Link>
-              <Link href="/about" className="button">
+              <Link href={`/${locale}/about`} className="button">
                 About
               </Link>
               <HeaderLangSwitcher />

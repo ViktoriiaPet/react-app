@@ -36,7 +36,12 @@ export interface SearchingBlockProps {
 
 export function SearchingBlock({ onResult }: SearchingBlockProps) {
   const { setItem, getItem } = useLocalStorage('words');
-  const [query, setQuery] = useState(() => getItem() || '');
+  const [query, setQuery] = useState(() => {
+  if (typeof window === 'undefined') return '';
+  const stored = getItem();
+  return stored || '';
+});
+
   const dispatch = useDispatch();
 
   const {
@@ -94,6 +99,7 @@ export function SearchingBlock({ onResult }: SearchingBlockProps) {
       });
     }
   }, [allPokemonList]);
+  
 
   return (
     <form onSubmit={handleSubmit}>
