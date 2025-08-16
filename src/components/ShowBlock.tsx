@@ -1,14 +1,12 @@
 'use client';
 import { useMemo } from 'react';
-import lleno from '../assets/corazon-lleno.png';
-import vacio from '../assets/corazón-vacío.png';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectLikedIds } from '../features/LikedSlice';
 import { toggleLike, deleteAllLikedPokemons } from '../features/LikedSlice';
 import { DownoladedSelectedPokemons } from '../servicios/downloadedSelected';
 import type { AppDispatch } from '../app-hook/store';
 import { useGetPokemonBatchQuery } from '../servicios/getDetailPokemon';
-import Image from "next/image";
+import Image from 'next/image';
 
 export interface PokemonData {
   name: string;
@@ -128,33 +126,58 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
                 >
                   <strong>{pokemon.name}</strong>{' '}
                   {pokemon.sprites.front_default && (
-                    <img
-                      src={pokemon.sprites.front_default}
-                      alt={pokemon.name}
-                    />
+                    <div
+                      style={{
+                        position: 'relative',
+                        width: '10vw',
+                        height: '10vw',
+                        borderRadius: '16px',
+                        padding: '0.2vw',
+                      }}
+                    >
+                      <Image
+                        src={pokemon.sprites.front_default}
+                        alt="pokemon"
+                        fill
+                        style={{ objectFit: 'contain' }}
+                      />
+                    </div>
                   )}
                 </div>
                 <div onClick={() => handleClickToLike(pokemon.id)}>
                   {selectPokemons.includes(pokemon.id) ? (
-                    
-                    <div style={{ position: 'relative', width: '2vw', height: '2vw', borderRadius: '16px', padding: '0.2vw' }}
-                      >
-                       <Image
-                      src="/vacio.png"
-                      alt="empty heart"
-                      fill
-                      style={{ objectFit: "contain" }}
-                        />
+                    <div
+                      style={{
+                        position: 'relative',
+                        width: '2vw',
+                        height: '2vw',
+                        borderRadius: '16px',
+                        padding: '0.2vw',
+                      }}
+                    >
+                      <Image
+                        src="/vacio.png"
+                        alt="empty heart"
+                        fill
+                        style={{ objectFit: 'contain' }}
+                      />
                     </div>
                   ) : (
-                   <div style={{ position: 'relative', width: '2vw', height: '2vw', borderRadius: '16px', padding: '0.2vw' }}
-                      >
-                       <Image
-                      src="/lleno.png"
-                      alt="lleno heart"
-                      fill
-                      style={{ objectFit: "contain" }}
-                        />
+                    <div
+                      style={{
+                        position: 'relative',
+                        width: '2vw',
+                        height: '2vw',
+                        borderRadius: '16px',
+                        padding: '0.2vw',
+                      }}
+                    >
+                      <Image
+                        src="/lleno.png"
+                        alt="lleno heart"
+                        fill
+                        style={{ objectFit: 'contain' }}
+                      />
                     </div>
                   )}
                 </div>
