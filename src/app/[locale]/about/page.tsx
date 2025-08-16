@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function AboutPage() {
   return (
@@ -57,9 +58,7 @@ export default function AboutPage() {
           learn Chinese—two challenges I’m very motivated to pursue.
         </p>
       </div>
-      <a href="https://rs.school/courses/reactjs">
-        <button className="button">Link to the course</button>
-      </a>
+
     </div>
   );
 }

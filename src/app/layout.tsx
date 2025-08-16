@@ -14,24 +14,54 @@ import { useParams } from 'next/navigation';
 export default function RootLayout({ children }: { children: ReactNode }) {
   const { locale } = useParams() || { locale: 'en' };
   return (
-    <Provider store={store}>
-      <PokemonProvider>
-        <ThemeProvider>
-          <ErrorBoundary>
-            <header>
-              <Link href={`/${locale}/search?page=1`} className="button">
-                Home
-              </Link>
-              <Link href={`/${locale}/about`} className="button">
-                About
-              </Link>
-              <HeaderLangSwitcher />
-              <ThemeButton />
-            </header>
-            {children}
-          </ErrorBoundary>
-        </ThemeProvider>
-      </PokemonProvider>
-    </Provider>
+    <html>
+      <body>
+        <Provider store={store}>
+          <PokemonProvider>
+            <ThemeProvider>
+              <ErrorBoundary>
+                <header
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    width: '100vw',
+                    justifyContent: 'space-evenly',
+                    alignItems: 'center',
+                    padding: '2vw',
+                    backgroundColor: 'gray',
+                  }}
+                >
+                  <Link href={`/${locale}/search?page=1`} className="button">
+                    Home
+                  </Link>
+                  <Link href={`/${locale}/about`} className="button">
+                    About
+                  </Link>
+                  <HeaderLangSwitcher />
+                  <ThemeButton />
+                </header>
+                {children}
+                <footer
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    width: '100vw',
+                    justifyContent: 'space-evenly',
+                    alignItems: 'center',
+                    padding: '2vw',
+                    backgroundColor: 'gray',
+                  }}
+                >
+                  <div>Rolling Scopes School</div>
+                  <Link href="https://rs.school/courses/reactjs">
+                    <button className="button">Link to the course</button>
+                  </Link>
+                </footer>
+              </ErrorBoundary>
+            </ThemeProvider>
+          </PokemonProvider>
+        </Provider>
+      </body>
+    </html>
   );
 }

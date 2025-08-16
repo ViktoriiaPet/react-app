@@ -59,8 +59,13 @@ button {
   text-decoration: none;
   border-radius: 4px;
 }
+
 button:hover {
   border-color: #646cff;
+}
+a.button {
+  padding: 1vw;
+  border-radius: 7%;
 }
 button:focus,
 button:focus-visible {

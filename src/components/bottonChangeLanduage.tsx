@@ -7,25 +7,39 @@ export const HeaderLangSwitcher = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const handleChangeLocale = (newLocale: string) => {
+  const currentLocale = pathname?.split('/')[1];
+  const availableLocales = locales.map((l) => l.code);
+
+  const currentIndex = availableLocales.indexOf(
+    currentLocale || locales[0].code
+  );
+
+  const nextLocale =
+    availableLocales[(currentIndex + 1) % availableLocales.length];
+
+  const handleChangeLocale = () => {
     if (!pathname) return;
     const parts = pathname.split('/');
-    if (!locales.some((l) => l.code === parts[1])) {
-      parts.splice(1, 0, newLocale);
+    if (!availableLocales.includes(parts[1])) {
+      parts.splice(1, 0, nextLocale);
     } else {
-      parts[1] = newLocale;
+      parts[1] = nextLocale;
     }
     const href = `${parts.join('/')}?${searchParams?.toString()}`;
     router.push(href);
   };
 
   return (
-    <footer>
-      {locales.map((l) => (
-        <button key={l.code} onClick={() => handleChangeLocale(l.code)}>
-          {l.label}
-        </button>
-      ))}
-    </footer>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1vw',
+      }}
+    >
+      <button onClick={handleChangeLocale}>
+        {locales.find((l) => l.code === nextLocale)?.label}
+      </button>
+    </div>
   );
 };

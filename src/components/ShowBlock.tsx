@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectLikedIds } from '../features/LikedSlice';
 import { toggleLike, deleteAllLikedPokemons } from '../features/LikedSlice';
-import { DownoladedSelectedPokemons } from '../servicios/downloadedSelected';
+import { downloadSelectedPokemons } from '../servicios/downloadedSelected';
 import type { AppDispatch } from '../app-hook/store';
 import { useGetPokemonBatchQuery } from '../servicios/getDetailPokemon';
 import Image from 'next/image';
@@ -76,7 +76,7 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
     }
   };
   const handleDownload = () => {
-    dispatch(DownoladedSelectedPokemons(selectPokemons));
+    dispatch(downloadSelectedPokemons(selectPokemons));
   };
   if (!result) {
     return (
