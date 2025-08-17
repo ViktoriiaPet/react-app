@@ -9,10 +9,12 @@ import { ErrorBoundary } from '../components/ErrorBoundary';
 import Link from 'next/link';
 import '../index.css';
 import { HeaderLangSwitcher } from '../components/bottonChangeLanduage';
-import { useParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  const { locale } = useParams() || { locale: 'en' };
+  const pathname = usePathname() || '/en';
+  const pathParts = pathname.split('/');
+  const locale = pathParts[1] === 'es' ? 'es' : 'en'; 
   return (
     <html>
       <body>

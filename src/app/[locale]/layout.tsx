@@ -1,23 +1,9 @@
-'use client';
-import { ReactNode } from 'react';
-import { NextIntlClientProvider } from 'next-intl';
-import en from '../../messages/en.json';
-import es from '../../messages/es.json';
+import LocaleLayout from "./LocaleLayout";
 
-export interface LocaleLayoutProps {
-  children: ReactNode;
-  params: { locale: string };
+export default function Layout({ children, params }: { children: React.ReactNode; params: { locale: string } }) {
+    const localeNew = params.locale ?? "en";
+  return <LocaleLayout locale={localeNew}>{children}</LocaleLayout>;
 }
-type Locale = 'en' | 'es';
-const allMessages: Record<Locale, Record<string, string>> = { en, es };
-
-export default function LocaleLayout({ children, params }: LocaleLayoutProps) {
-  const locale = (params.locale === 'es' ? 'es' : 'en') as Locale;
-  const messages = allMessages[locale] || allMessages['en'];
-
-  return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
-      <div style={{ minHeight: '100vh', overflowY: 'auto' }}>{children}</div>
-    </NextIntlClientProvider>
-  );
+export function generateStaticParams() {
+  return [{ locale: "en" }, { locale: "es" }];
 }
