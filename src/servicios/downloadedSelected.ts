@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { pokemonApi } from './getDetailPokemon';
 import type { PokemonData } from '../components/ShowBlock';
 
-export const DownoladedSelectedPokemons = createAsyncThunk(
+export const downloadSelectedPokemons = createAsyncThunk(
   'liked/downloadSelectedPokemons',
   async (ids: number[], { dispatch }) => {
     const results: PokemonData[] = [];
@@ -14,50 +14,30 @@ export const DownoladedSelectedPokemons = createAsyncThunk(
 
       if ('data' in result && result.data) {
         results.push(result.data as PokemonData);
-      } else {
-        console.error(`Ошибка загрузки покемона с id ${id}`);
       }
     }
+    const res = await fetch('/api/download', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pokemons: results }),
+    });
 
-    const csv = generateCSV(results);
-    downloadCSV(csv, results.length);
-    console.log('Results before return:', results);
+    if (!res.ok) throw new Error('Error with CSV in the server');
+
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `pokemons_${results.length}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
     return results;
   }
 );
-
-export function downloadCSV(csvContent: string, count: number) {
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  const filename = `${count}__items.csv`;
-  link.setAttribute('download', filename);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
-}
-
-function generateCSV(data: PokemonData[]) {
-  if (data.length === 0) return '';
-
-  const headers = ['id', 'name', 'weight', 'sprite'];
-
-  const rows = data.map((pokemon) => {
-    const { id, name, weight, sprites } = pokemon;
-    const spriteUrl = sprites.front_default || '';
-
-    return [
-      id.toString(),
-      `"${name.replace(/"/g, '""')}"`,
-      weight.toString(),
-      `"${spriteUrl.replace(/"/g, '""')}"`,
-    ].join(',');
-  });
-
-  return [headers.join(','), ...rows].join('\r\n');
-}
 
 export const resetPokemonCacheCompletely = createAsyncThunk(
   'pokemon/resetCache',

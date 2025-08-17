@@ -1,15 +1,15 @@
+'use client';
 import { useState, useEffect } from 'react';
-import { SearchingBlock } from '../components/SearchBlock';
-import { ShowScreen } from '../components/ShowBlock';
+import { SearchingBlock } from '../../../components/SearchBlock';
+import { ShowScreen } from '../../../components/ShowBlock';
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import {
-  useSearchParams,
-  Outlet,
-  useParams,
-  useNavigate,
-  useLocation,
-} from 'react-router-dom';
-import { useGetAllPokemonListQuery } from '../servicios/getDetailPokemon';
-import { useGetPokemonListQuery } from '../servicios/getDetailPokemon';
+  useGetAllPokemonListQuery,
+  useGetPokemonListQuery,
+} from '../../../servicios/getDetailPokemon';
+import { useTranslations } from 'next-intl';
+import { getPokemons } from '../../lib/getData';
+import { pokemonApi } from '../../../servicios/getDetailPokemon';
 
 export type ResultType = PokemonData | PokeListResponse | null;
 
@@ -17,9 +17,7 @@ export interface PokemonData {
   name: string;
   id: number;
   weight: number;
-  sprites: {
-    front_default: string;
-  };
+  sprites: { front_default: string };
 }
 
 export interface PokemonShort {
@@ -33,19 +31,40 @@ export interface PokeListResponse {
   previous: string | null;
   results: PokemonShort[];
 }
-
-export default function SearchPage() {
+export default function Page() {
+  const t = useTranslations();
   const [result, setResult] = useState<ResultType>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const page = Number(searchParams.get('page') || '1');
-  const { name } = useParams();
 
-  const navigate = useNavigate();
-  const location = useLocation();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    async function fetchInitial() {
+      const serverData = await getPokemons(0, 20);
+      setResult(serverData);
+
+      pokemonApi.util.updateQueryData(
+        'getPokemonList',
+        { offset: 0, limit: 20 },
+        (draft) => {
+          Object.assign(draft, serverData);
+        }
+      );
+    }
+
+    fetchInitial();
+  }, []);
+
+  const page = Number(searchParams?.get('page') ?? '1');
 
   const limit = 20;
   const offset = (page - 1) * limit;
-  const searchWord = localStorage.getItem('words')?.toLowerCase() || '';
+  const searchWord =
+    (typeof window !== 'undefined'
+      ? localStorage.getItem('words')
+      : ''
+    )?.toLowerCase() || '';
 
   const {
     data: pageData,
@@ -77,17 +96,30 @@ export default function SearchPage() {
   }, [searchWord, allData, pageData, offset, limit]);
 
   const goToPage = (newPage: number) => {
-    setSearchParams({ page: newPage.toString() });
+    const params = new URLSearchParams(searchParams?.toString());
+    params.set('page', String(newPage));
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   const handleResult = (data: ResultType) => {
-    setSearchParams({ page: '1' });
+    const params = new URLSearchParams();
+    params.set('page', '1');
+    router.push(`${pathname}?${params.toString()}`);
     setResult(data);
   };
 
-  const handlePokemonClick = (name: string) => {
-    const currentSearch = searchParams.toString();
-    navigate(`${name}?${currentSearch}`);
+  const handlePokemonClick = (pokemonName: string) => {
+    const pathnameParts = pathname?.split('/');
+    let locale;
+    if (pathnameParts) {
+      locale = pathnameParts[1] || 'en';
+    }
+
+    const params = new URLSearchParams(searchParams?.toString());
+    const href = `/${locale}/search/${encodeURIComponent(pokemonName)}?${params.toString()}`;
+    console.log('pokemonName type:', typeof pokemonName, pokemonName);
+    console.log(href);
+    router.push(href);
   };
 
   const isLoading = searchWord ? isAllLoading : isPageLoading;
@@ -105,12 +137,11 @@ export default function SearchPage() {
           flexDirection: 'column',
         }}
       >
-        <h1>Welcome to the Main &apos;Pokemon&apos; page!</h1>
-        <h3>
-          You can try to enter names of pokemons (for example &quot;ditto&quot;,
-          &quot;raichu&quot;, &quot;pikachu&quot;)
-        </h3>
-        {isLoading && <div className="load">Loading...</div>}
+        <h1> {t('searchTitle')} </h1>
+        <h3>{t('helpMessage')}</h3>
+
+        {isLoading && <div className="load"> {t('load')}</div>}
+
         <SearchingBlock onResult={handleResult} />
 
         <ShowScreen
@@ -126,50 +157,24 @@ export default function SearchPage() {
               disabled={page <= 1}
               onClick={() => goToPage(page - 1)}
             >
-              Previous
+              {t('previous')}
             </button>
-            <span style={{ margin: '0 10px' }}>Page {page}</span>
+            <span style={{ margin: '0 10px' }}>
+              {t('page')} {page}
+            </span>
             <button
               className="button"
               disabled={page >= Math.ceil(result.count / limit)}
               onClick={() => goToPage(page + 1)}
             >
-              Next
+              {t('next')}
             </button>
           </div>
         )}
       </div>
-      {name && (
-        <div>
-          <button
-            className="button"
-            onClick={() =>
-              navigate({ pathname: '/react-app/', search: location.search })
-            }
-            style={{
-              marginLeft: '50%',
-            }}
-          >
-            Close Detail Page
-          </button>
-          <div
-            style={{
-              flex: 1,
-              borderLeft: '1px solid #ccc',
-              padding: '1rem',
-              marginLeft: '1rem',
-            }}
-          >
-            <Outlet />
-          </div>
-        </div>
-      )}
-      {allError && (
-        <div className="error-message">Error loading all pokemons</div>
-      )}
-      {pageError && (
-        <div className="error-message">Error with getting page</div>
-      )}
+
+      {allError && <div className="error-message">{t('ErrorAllPok')}</div>}
+      {pageError && <div className="error-message">{t('ErrorGettPage')}</div>}
     </div>
   );
 }

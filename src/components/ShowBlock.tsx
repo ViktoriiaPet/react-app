@@ -1,12 +1,13 @@
+'use client';
 import { useMemo } from 'react';
-import lleno from '../assets/corazon-lleno.png';
-import vacio from '../assets/corazón-vacío.png';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectLikedIds } from '../features/LikedSlice';
 import { toggleLike, deleteAllLikedPokemons } from '../features/LikedSlice';
-import { DownoladedSelectedPokemons } from '../servicios/downloadedSelected';
-import type { AppDispatch } from '../app/store';
+import { downloadSelectedPokemons } from '../servicios/downloadedSelected';
+import type { AppDispatch } from '../app-hook/store';
 import { useGetPokemonBatchQuery } from '../servicios/getDetailPokemon';
+import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 export interface PokemonData {
   name: string;
@@ -38,6 +39,7 @@ interface ShowScreenProps {
 type ResultType = PokemonData | PokeListResponse | null;
 
 export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
+  const t = useTranslations();
   const selectPokemons = useSelector(selectLikedIds);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -76,14 +78,14 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
     }
   };
   const handleDownload = () => {
-    dispatch(DownoladedSelectedPokemons(selectPokemons));
+    dispatch(downloadSelectedPokemons(selectPokemons));
   };
   if (!result) {
     return (
       <div className="granPantalla">
-        <h2>Your results</h2>
+        <h2> {t('yourResult')}</h2>
         <div className="showPantalla">
-          <p>Will show here</p>
+          <p>{t('showHere')}</p>
         </div>
       </div>
     );
@@ -92,9 +94,9 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
   if (isListResponse(result)) {
     return (
       <div className="granPantalla">
-        {isError && <div className="error-message">Error loading pokemons</div>}
+        {isError && <div className="error-message">{t('ErrorAllPok')} </div>}
         <div className="showPantalla">
-          <h2>Pokémon list</h2>
+          <h2> {t('pokeList')}</h2>
           <ul
             style={{
               display: 'flex',
@@ -102,7 +104,7 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
               gap: '2vw',
             }}
           >
-            {isLoading && <div className="load">Loading...</div>}
+            {isLoading && <div className="load">{t('load')}</div>}
             {detailedList.map((pokemon) => (
               <li
                 key={pokemon.id}
@@ -126,17 +128,59 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
                 >
                   <strong>{pokemon.name}</strong>{' '}
                   {pokemon.sprites.front_default && (
-                    <img
-                      src={pokemon.sprites.front_default}
-                      alt={pokemon.name}
-                    />
+                    <div
+                      style={{
+                        position: 'relative',
+                        width: '10vw',
+                        height: '10vw',
+                        borderRadius: '16px',
+                        padding: '0.2vw',
+                      }}
+                    >
+                      <Image
+                        src={pokemon.sprites.front_default}
+                        alt="pokemon"
+                        fill
+                        style={{ objectFit: 'contain' }}
+                      />
+                    </div>
                   )}
                 </div>
                 <div onClick={() => handleClickToLike(pokemon.id)}>
                   {selectPokemons.includes(pokemon.id) ? (
-                    <img src={`${vacio}`} className="color" alt="like button" />
+                    <div
+                      style={{
+                        position: 'relative',
+                        width: '2vw',
+                        height: '2vw',
+                        borderRadius: '16px',
+                        padding: '0.2vw',
+                      }}
+                    >
+                      <Image
+                        src="/vacio.png"
+                        alt="empty heart"
+                        fill
+                        style={{ objectFit: 'contain' }}
+                      />
+                    </div>
                   ) : (
-                    <img src={`${lleno}`} className="color" alt="like button" />
+                    <div
+                      style={{
+                        position: 'relative',
+                        width: '2vw',
+                        height: '2vw',
+                        borderRadius: '16px',
+                        padding: '0.2vw',
+                      }}
+                    >
+                      <Image
+                        src="/lleno.png"
+                        alt="lleno heart"
+                        fill
+                        style={{ objectFit: 'contain' }}
+                      />
+                    </div>
                   )}
                 </div>
               </li>
@@ -145,7 +189,10 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
         </div>
         {selectPokemons.length > 0 && (
           <div className="selectedBlock">
-            <p>You already selected {selectPokemons.length} pokemons</p>
+            <p>
+              {t('selected')}
+              {selectPokemons.length}
+            </p>
             <div
               style={{
                 display: 'flex',
@@ -158,7 +205,7 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
                   dispatch(deleteAllLikedPokemons());
                 }}
               >
-                Reject all pokemons
+                {t('reject')}
               </button>
               <button
                 className="button"
@@ -166,7 +213,7 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
                   handleDownload();
                 }}
               >
-                Download selected pokemons
+                {t('download')}
               </button>
             </div>
             <div></div>
@@ -178,9 +225,9 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
 
   return (
     <div className="granPantalla">
-      <h2>Your results</h2>
+      <h2>{t('yourResult')}</h2>
       <div className="showPantalla">
-        <p>No data available</p>
+        <p> {t('notAvailable')}</p>
       </div>
     </div>
   );

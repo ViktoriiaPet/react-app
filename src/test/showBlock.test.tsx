@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { ShowScreen } from './ShowBlock';
 import { vi } from 'vitest';
-import { store } from '../app/store';
+import { store } from '../app-hook/store';
 import { Provider } from 'react-redux';
 import { toggleLike } from '../features/LikedSlice';
 import userEvent from '@testing-library/user-event';
