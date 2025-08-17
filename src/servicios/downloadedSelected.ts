@@ -22,7 +22,7 @@ export const downloadSelectedPokemons = createAsyncThunk(
       body: JSON.stringify({ pokemons: results }),
     });
 
-    if (!res.ok) throw new Error('Ошибка генерации CSV на сервере');
+    if (!res.ok) throw new Error('Error with CSV in the server');
 
     const blob = await res.blob();
     const url = URL.createObjectURL(blob);

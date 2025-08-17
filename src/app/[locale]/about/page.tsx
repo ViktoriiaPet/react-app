@@ -1,6 +1,7 @@
 import Image from 'next/image';
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  await new Promise((res) => setTimeout(res, 2000));
   return (
     <div>
       <h2>About the author</h2>

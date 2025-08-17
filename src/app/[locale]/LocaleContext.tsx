@@ -7,6 +7,12 @@ const LocaleContext = createContext<Locale>('en');
 
 export const useLocale = () => useContext(LocaleContext);
 
-export const LocaleProvider = ({ children, locale }: { children: ReactNode; locale: Locale }) => (
+export const LocaleProvider = ({
+  children,
+  locale,
+}: {
+  children: ReactNode;
+  locale: Locale;
+}) => (
   <LocaleContext.Provider value={locale}>{children}</LocaleContext.Provider>
 );

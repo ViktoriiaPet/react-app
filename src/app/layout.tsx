@@ -14,7 +14,7 @@ import { usePathname } from 'next/navigation';
 export default function RootLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname() || '/en';
   const pathParts = pathname.split('/');
-  const locale = pathParts[1] === 'es' ? 'es' : 'en'; 
+  const locale = pathParts[1] === 'es' ? 'es' : 'en';
   return (
     <html>
       <body>
