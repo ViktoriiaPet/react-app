@@ -1,5 +1,6 @@
 'use client';
 import { useGetPokemonByNameQuery } from '../../../../servicios/getDetailPokemon';
+import { useTranslations } from 'next-intl';
 
 export interface PokemonDetail {
   name: string;
@@ -10,20 +11,26 @@ export interface PokemonDetail {
 }
 
 export function MasterPage({ name }: { name: string }) {
+  const t = useTranslations();
   const { data, isError, isLoading } = useGetPokemonByNameQuery(name);
 
-  if (isLoading) return <div className="load">Loading...</div>;
-  if (isError)
-    return <div className="error-message">Error loading pokemon</div>;
-  if (!data) return <p>No data found</p>;
+  if (isLoading) return <div className="load">{t('load')}</div>;
+  if (isError) return <div className="error-message">{t('ErrorAllPok')}</div>;
+  if (!data) return <p>{t('notAvailable')}</p>;
 
   return (
     <div style={{ padding: '1rem' }}>
-      <h2>Pokemon detail</h2>
+      <h2>{t('detail')}</h2>
       <img src={data.sprites.front_default} alt={data.name} />
-      <p>Name: {data.name}</p>
-      <p>Height: {data.height}</p>
-      <p>Weight: {data.weight}</p>
+      <p>
+        {t('name')}: {data.name}
+      </p>
+      <p>
+        {t('height')}: {data.height}
+      </p>
+      <p>
+        {t('weight')}: {data.weight}
+      </p>
     </div>
   );
 }

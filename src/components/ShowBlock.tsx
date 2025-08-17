@@ -7,6 +7,7 @@ import { downloadSelectedPokemons } from '../servicios/downloadedSelected';
 import type { AppDispatch } from '../app-hook/store';
 import { useGetPokemonBatchQuery } from '../servicios/getDetailPokemon';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 export interface PokemonData {
   name: string;
@@ -38,6 +39,7 @@ interface ShowScreenProps {
 type ResultType = PokemonData | PokeListResponse | null;
 
 export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
+  const t = useTranslations();
   const selectPokemons = useSelector(selectLikedIds);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -81,9 +83,9 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
   if (!result) {
     return (
       <div className="granPantalla">
-        <h2>Your results</h2>
+        <h2> {t('yourResult')}</h2>
         <div className="showPantalla">
-          <p>Will show here</p>
+          <p>{t('showHere')}</p>
         </div>
       </div>
     );
@@ -92,9 +94,9 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
   if (isListResponse(result)) {
     return (
       <div className="granPantalla">
-        {isError && <div className="error-message">Error loading pokemons</div>}
+        {isError && <div className="error-message">{t('ErrorAllPok')} </div>}
         <div className="showPantalla">
-          <h2>Pokémon list</h2>
+          <h2> {t('pokeList')}</h2>
           <ul
             style={{
               display: 'flex',
@@ -102,7 +104,7 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
               gap: '2vw',
             }}
           >
-            {isLoading && <div className="load">Loading...</div>}
+            {isLoading && <div className="load">{t('load')}</div>}
             {detailedList.map((pokemon) => (
               <li
                 key={pokemon.id}
@@ -187,7 +189,10 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
         </div>
         {selectPokemons.length > 0 && (
           <div className="selectedBlock">
-            <p>You already selected {selectPokemons.length} pokemons</p>
+            <p>
+              {t('selected')}
+              {selectPokemons.length}
+            </p>
             <div
               style={{
                 display: 'flex',
@@ -200,7 +205,7 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
                   dispatch(deleteAllLikedPokemons());
                 }}
               >
-                Reject all pokemons
+                {t('reject')}
               </button>
               <button
                 className="button"
@@ -208,7 +213,7 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
                   handleDownload();
                 }}
               >
-                Download selected pokemons
+                {t('download')}
               </button>
             </div>
             <div></div>
@@ -220,9 +225,9 @@ export function ShowScreen({ result, onPokemonClick }: ShowScreenProps) {
 
   return (
     <div className="granPantalla">
-      <h2>Your results</h2>
+      <h2>{t('yourResult')}</h2>
       <div className="showPantalla">
-        <p>No data available</p>
+        <p> {t('notAvailable')}</p>
       </div>
     </div>
   );

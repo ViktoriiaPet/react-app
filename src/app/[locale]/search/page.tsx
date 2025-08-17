@@ -138,12 +138,9 @@ export default function Page() {
         }}
       >
         <h1> {t('searchTitle')} </h1>
-        <h3>
-          You can try to enter names of pokemons (for example &quot;ditto&quot;,
-          &quot;raichu&quot;, &quot;pikachu&quot;)
-        </h3>
+        <h3>{t('helpMessage')}</h3>
 
-        {isLoading && <div className="load">Loading...</div>}
+        {isLoading && <div className="load"> {t('load')}</div>}
 
         <SearchingBlock onResult={handleResult} />
 
@@ -160,26 +157,24 @@ export default function Page() {
               disabled={page <= 1}
               onClick={() => goToPage(page - 1)}
             >
-              Previous
+              {t('previous')}
             </button>
-            <span style={{ margin: '0 10px' }}>Page {page}</span>
+            <span style={{ margin: '0 10px' }}>
+              {t('page')} {page}
+            </span>
             <button
               className="button"
               disabled={page >= Math.ceil(result.count / limit)}
               onClick={() => goToPage(page + 1)}
             >
-              Next
+              {t('next')}
             </button>
           </div>
         )}
       </div>
 
-      {allError && (
-        <div className="error-message">Error loading all pokemons</div>
-      )}
-      {pageError && (
-        <div className="error-message">Error with getting page</div>
-      )}
+      {allError && <div className="error-message">{t('ErrorAllPok')}</div>}
+      {pageError && <div className="error-message">{t('ErrorGettPage')}</div>}
     </div>
   );
 }

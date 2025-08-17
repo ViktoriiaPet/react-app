@@ -7,6 +7,7 @@ import { useGetAllPokemonListQuery } from '../servicios/getDetailPokemon';
 import { useGetPokemonListQuery } from '../servicios/getDetailPokemon';
 import { resetPokemonCacheCompletely } from '../servicios/downloadedSelected';
 import { deleteAllLikedPokemons } from '../features/LikedSlice';
+import { useTranslations } from 'next-intl';
 
 interface PokemonData {
   name: string;
@@ -35,6 +36,7 @@ export interface SearchingBlockProps {
 }
 
 export function SearchingBlock({ onResult }: SearchingBlockProps) {
+  const t = useTranslations();
   const { setItem, getItem } = useLocalStorage('words');
   const [query, setQuery] = useState(() => {
     if (typeof window === 'undefined') return '';
@@ -102,26 +104,28 @@ export function SearchingBlock({ onResult }: SearchingBlockProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      {isLoading && <div className="load">Loading...</div>}
+      {isLoading && <div className="load">{t('load')}</div>}
       <input
-        placeholder="Please, enter..."
+        placeholder={t('enter')}
         value={query}
         onChange={handleChange}
       ></input>
       <button type="submit" className="button">
-        Search!
+        {t('search')}
       </button>
       <button className="button" onClick={hadleResetCache}>
-        Reset Cache
+        {t('reset')}
       </button>
       {isAllPokemonError && (
         <div className="error-message">
-          Error loading all pokemons: {JSON.stringify(allPokemonError)}
+          {t('ErrorAllPok')}
+          {JSON.stringify(allPokemonError)}
         </div>
       )}
       {isPaginatedError && (
         <div className="error-message">
-          Error loading paginated: {JSON.stringify(paginatedError)}
+          {t('ErrorGettPage')}
+          {JSON.stringify(paginatedError)}
         </div>
       )}
     </form>
