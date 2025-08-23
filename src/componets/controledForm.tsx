@@ -1,18 +1,12 @@
-import { useState } from 'react';
-import { createPortal } from 'react-dom';
+
 import ModalContent from './controledContent';
 
-export default function PortalControledForm() {
-  const [showModal, setShowModal] = useState(false);
+type Props = {onClose: ()=> void}
+
+export default function ControledForm( {onClose}:Props ) {
   return (
     <>
-      <button onClick={() => setShowModal(true)}>
-        Show the controled Form
-      </button>
-      {showModal && createPortal(
-        <ModalContent onClose={() => setShowModal(false)} />,
-        document.body
-      )}
+        <ModalContent onClose = {onClose} />,
     </>
   );
 }

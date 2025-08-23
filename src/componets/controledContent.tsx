@@ -6,7 +6,7 @@ import { registrationSchema } from "../utils/validateRegistration";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import {useDispatch } from "react-redux";
-import { setUser } from "../feathures/formSubmit";
+import { addUser } from "../feathures/formSubmit";
 
 type ModalContentProps = {
   onClose: () => void;
@@ -19,16 +19,17 @@ export default function ModalContent({ onClose } : ModalContentProps) {
       const dispatch = useDispatch();
     const countries = useSelector((state: RootState) => state.countries);
  
-    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors, isValid } } = useForm<FormData>({
     resolver: zodResolver(registrationSchema),
     mode: "onChange",
+    criteriaMode: "all",
   });
    console.log(errors);
 
 
   const onSubmit = (data: FormData) => {
 
-    dispatch(setUser({
+    dispatch(addUser({
       name: data.name,
       email: data.email,
       age: data.age,
@@ -85,12 +86,15 @@ export default function ModalContent({ onClose } : ModalContentProps) {
                     {errors.passwordRepit && <p className="errors">{errors.passwordRepit.message}</p>}
                 </div>
                 <div>
-                    <label  htmlFor="sex">
-                    Gender
-                    </label>
-                    <input id="sex" {...register("sex")}/>
-                    {errors.sex && <p className="errors">{errors.sex.message}</p>}
-                </div>
+                  <label htmlFor="sex">Gender:</label>
+                  <select id="sex"  {...register("sex", { required: "Выберите пол" })} name="sex" defaultValue="">
+                  <option value="" disabled>Gender</option>
+                   <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="I don't now">I don't now</option>
+                  </select>
+  {errors.sex && <p style={{ color: "red" }}>{errors.sex.message}</p>}
+  </div>
                 <div>
                     <label  htmlFor="terms">
                     Client's terms
@@ -102,14 +106,14 @@ export default function ModalContent({ onClose } : ModalContentProps) {
                     <label  htmlFor="image">
                     Image
                     </label>
-                    <input id="image" {...register("image")}/>
+                    <input id="image"{...register("image", { required: "Выберите изображение" })}/>
                     {errors.image && <p className="errors">{errors.image.message}</p>}
                 </div>
                 <div>
                     <label htmlFor="country">
                     Country
                     </label>
-                    <input list="countries" id="country" {...register("country")} />
+                    <input list="countries" id="country" {...register("country", { required: "Выберите страну" })} />
                     <datalist id="countries">
         {countries.map((c) => (
           <option key={c} value={c} />
@@ -118,7 +122,8 @@ export default function ModalContent({ onClose } : ModalContentProps) {
       {errors.country && <p className="errors">{errors.country.message}</p>}
                 </div>
             </div>
-            <button>Submit</button>
+            <button type="submit" disabled={!isValid}>Submit</button>
+            <input type="reset" value="Reset"></input>
         </form>
   );
 }

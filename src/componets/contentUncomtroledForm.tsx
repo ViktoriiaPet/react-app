@@ -1,9 +1,9 @@
-import { createPortal } from 'react-dom';
 import { useRef } from "react";
-import { setUser } from "../feathures/formSubmit";
-import {useDispatch } from "react-redux";
+import { addUser } from "../feathures/formSubmit";
+import {useDispatch, useSelector } from "react-redux";
 import { registrationSchema } from "../utils/validateRegistration";
 import { useState } from 'react';
+import type { RootState } from "../app/store";
 
 
 type UncontrolledModalProps = {
@@ -11,6 +11,7 @@ type UncontrolledModalProps = {
 };
 
 export default function ContentUncontroledForm({ onClose }: UncontrolledModalProps) {
+  const countries = useSelector((state: RootState) => state.countries);
     const dispatch = useDispatch();
     const formRef = useRef<HTMLFormElement | null>(null);
     const [errors, setErrors] = useState<Record<string, string[]>>({});
@@ -29,7 +30,7 @@ export default function ContentUncontroledForm({ onClose }: UncontrolledModalPro
     sex: formData.get("sex") as "Male" | "Female" | "I don't now",
     terms: formData.get("terms") === "on",
     image: formData.get("image") as string,
-    country: formData.get("country") as string,
+    country: (formData.get("country") as string) || "",
     };
 
      const result = registrationSchema.safeParse(rawData);
@@ -41,11 +42,12 @@ export default function ContentUncontroledForm({ onClose }: UncontrolledModalPro
     }
 
     setErrors({});
-    dispatch(setUser(result.data));
+    dispatch(addUser(result.data));
+    formRef.current?.reset();
     onClose();
   }
 
-    return createPortal(
+    return(
     <div>
       <div>
         <h2>Uncontrolled Form</h2>
@@ -80,16 +82,16 @@ export default function ContentUncontroledForm({ onClose }: UncontrolledModalPro
             />
              {errors.age && <p style={{color: "red"}}>{errors.age[0]}</p>}
           </div>
-                    <div>
-            <label htmlFor="sex">Gender:</label>
-            <input
-              type="text"
-              id="sex"
-              name="sex"
-              defaultValue=""
-            />
-             {errors.sex && <p style={{color: "red"}}>{errors.sex[0]}</p>}
-          </div>
+          <div>
+                  <label htmlFor="sex">Gender:</label>
+                  <select id="sex" name="sex" defaultValue="">
+                  <option value="" disabled>Gender</option>
+                   <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="I don't now">I don't now</option>
+                  </select>
+                    {errors.sex && <p style={{color: "red"}}>{errors.sex[0]}</p>}
+                  </div>
                     <div>
             <label htmlFor="password">Password:</label>
             <input
@@ -116,7 +118,6 @@ export default function ContentUncontroledForm({ onClose }: UncontrolledModalPro
               type="checkbox"
               id="terms"
               name="terms"
-              defaultValue=""
             />
              {errors.terms && <p style={{color: "red"}}>{errors.terms[0]}</p>}
           </div>
@@ -130,30 +131,27 @@ export default function ContentUncontroledForm({ onClose }: UncontrolledModalPro
             />
              {errors.image && <p style={{color: "red"}}>{errors.image[0]}</p>}
           </div>
-                    <div>
-            <label htmlFor="country">Country:</label>
-            <input
-              type="text"
-              id="country"
-              name="country"
-              defaultValue=""
-            />
-             {errors.country && <p style={{color: "red"}}>{errors.country[0]}</p>}
-          </div>
+
+           <div>
+            <label htmlFor="country">
+            Country
+            </label>
+            <input list="countries" id="country"/>
+            <datalist id="countries">
+        {countries.map((c) => (
+          <option key={c} value={c} />
+        ))}
+      </datalist>
+      {errors.country && <p className="errors">{errors.country[0]}</p>}
+                </div>
           <div>
             <button type="submit">
               Submit
             </button>
-            <button
-              type="button"
-              onClick={onClose}
-            >
-              Close
-            </button>
+            <input type="reset" value="Reset"></input>
           </div>
         </form>
       </div>
-    </div>,
-    document.body
+    </div>
   );
 }

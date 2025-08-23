@@ -1,20 +1,11 @@
-import { createPortal } from 'react-dom';
-import { useState } from 'react';
-
 import ContentUncontroledForm from './contentUncomtroledForm';
 
+type Props = { onClose: () => void }
 
-export default function PortalUncontroledForm() {
-   const [showModal, setShowModal] = useState(false);
+export default function UncontroledForm({ onClose }: Props) {
     return (
        <>
-         <button onClick={() => setShowModal(true)}>
-           Show the uncontroled Form
-         </button>
-         {showModal && createPortal(
-           <ContentUncontroledForm onClose={() => setShowModal(false)} />,
-           document.body
-         )}
+           return <ContentUncontroledForm onClose={onClose} />
        </>
      );
 }

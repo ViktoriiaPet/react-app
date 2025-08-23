@@ -20,11 +20,11 @@ export const registrationSchema = z.object({
     passwordRepit: z
     .string()
     .min(1, "Повторите пароль"),
-    age: z.number().min(0, "Возраст не может быть отрицательным"),
-    image: z.base64(),
+    age: z.number().min(0, "Возраст не может быть отрицательным").int("Возраст должен быть целым числом"),
+    image: z.base64().min(1, "Выберите изображение"),
     terms: z.literal(true, { message: "Необходимо согласиться с условиями" }),
     sex: z.enum(["Male", "Female", "I don't now"]),
-    country: z.string(),
+    country: z.string().min(1, "Выберите страну"),
 
 }).superRefine(({ passwordRepit, password }, ctx) => {
   if (passwordRepit !== password) {
