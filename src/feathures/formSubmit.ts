@@ -6,20 +6,23 @@ type UserState = {
   age: number;
   sex: string;
   password: string;
+  passwordRepit:string;
   terms:boolean;
   image:Base64URLString;
-  contry: string;
+  country: string;
 };
 
 const initialState: UserState = {
   name: "",
   email: "",
+  password:"",
+  passwordRepit:"",
   age: 0,
   sex:"",
-  password:"",
+
   terms: false,
   image: "",
-  contry: ""
+  country: ""
 };
 
 const userSlice = createSlice({
@@ -32,9 +35,10 @@ const userSlice = createSlice({
       state.age= action.payload.age;
       state.sex= action.payload.sex;
       state.password = action.payload.password;
+      state.passwordRepit = action.payload.passwordRepit;
       state.terms = action.payload.terms;
       state.image = action.payload.image;
-      state.contry = action.payload.contry
+      state.country = action.payload.country
 
     },
     clearUser: (state) => {

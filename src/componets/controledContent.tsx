@@ -19,24 +19,25 @@ export default function ModalContent({ onClose } : ModalContentProps) {
       const dispatch = useDispatch();
     const countries = useSelector((state: RootState) => state.countries);
  
-    const { register, handleSubmit,watch, trigger, formState: { errors } } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(registrationSchema),
     mode: "onChange",
   });
    console.log(errors);
-const password = watch("password");
+
 
   const onSubmit = (data: FormData) => {
 
     dispatch(setUser({
-      name: data.username,
+      name: data.name,
       email: data.email,
       age: data.age,
       sex: data.sex,
       password: data.password,
+      passwordRepit: data.passwordRepit,
       terms: data.terms,
       image: data.image,
-      contry: data.country,
+      country: data.country,
     }));
     onClose();
   };
@@ -52,8 +53,8 @@ const password = watch("password");
                     <label  htmlFor="username">
                     Name
                     </label>
-                    <input id="username" {...register("username")}/>
-                    {errors.username && <p className="errors">{errors.username.message}</p>}
+                    <input id="name" {...register("name")}/>
+                    {errors.name && <p className="errors">{errors.name.message}</p>}
                 </div>
                 <div>
                     <label  htmlFor="age">

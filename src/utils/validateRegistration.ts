@@ -1,10 +1,7 @@
 import z from "zod";
 
-
-
-
 export const registrationSchema = z.object({
-  username: z
+  name: z
     .string()
     .min(1, 'Enter the name')
     .regex( /^[A-ZА-ЯЁ][A-Za-zА-Яа-яЁё]*$/,
