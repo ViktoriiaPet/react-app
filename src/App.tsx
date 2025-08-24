@@ -24,6 +24,8 @@ function App() {
   return (
     <div>
       The main page
+      <h4>Exapmle for image: </h4>
+      <p>iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAADUlEQVR4nGNgGAWkAwABNgABVtF/yAAAAABJRU5ErkJggg==</p>
       <ClientsForm />
       <button onClick={openControlled}>Open Controlled Form</button>
       <button onClick={openUncontrolled}>Open Uncontrolled Form</button>
