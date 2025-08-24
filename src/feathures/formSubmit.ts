@@ -6,16 +6,15 @@ type User = {
   age: number;
   sex: string;
   password: string;
-  passwordRepit:string;
-  terms:boolean;
-  image:Base64URLString;
+  passwordRepit: string;
+  terms: boolean;
+  image: Base64URLString;
   country: string;
 };
 
 type UserState = {
   users: User[];
 };
-
 
 const initialState: UserState = {
   users: [],

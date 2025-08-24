@@ -11,11 +11,14 @@ export default function Modal({ onClose, children }: ModalProps) {
       onClick={onClose}
       style={{
         position: "fixed",
-        top: 0, left: 0, right: 0, bottom: 0,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
         background: "rgba(0,0,0,0.5)",
         display: "flex",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
       }}
     >
       <div
@@ -24,12 +27,12 @@ export default function Modal({ onClose, children }: ModalProps) {
           background: "#fff",
           padding: "20px",
           borderRadius: "8px",
-          minWidth: "300px"
+          minWidth: "300px",
         }}
       >
         {children}
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }
