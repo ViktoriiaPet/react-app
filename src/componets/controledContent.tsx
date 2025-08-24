@@ -71,7 +71,7 @@ export default function ModalContent({ onClose }: ModalContentProps) {
       <div>
         <h3>Controled Form</h3>
         <div>
-          <label htmlFor="username">Name</label>
+          <label htmlFor="name">Name</label>
           <input id="name" {...register("name")} />
           <p className="errors">
             {errors.name && <p>{errors.name.message}</p>}
