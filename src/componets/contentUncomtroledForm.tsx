@@ -55,17 +55,25 @@ export default function ContentUncontroledForm({
           <div>
             <label htmlFor="name">Name:</label>
             <input type="text" id="name" name="name" defaultValue="" />
-            {errors.name && <p style={{ color: "red" }}>{errors.name[0]}</p>}
+            <p className="errors">
+              {errors.name && <p style={{ color: "red" }}>{errors.name[0]}</p>}
+            </p>
           </div>
           <div>
             <label htmlFor="email">Email:</label>
             <input type="email" id="email" name="email" defaultValue="" />
-            {errors.email && <p style={{ color: "red" }}>{errors.email[0]}</p>}
+            <p className="errors">
+              {errors.email && (
+                <p style={{ color: "red" }}>{errors.email[0]}</p>
+              )}
+            </p>
           </div>
           <div>
             <label htmlFor="age">Age:</label>
             <input type="number" id="age" name="age" defaultValue="" />
-            {errors.age && <p style={{ color: "red" }}>{errors.age[0]}</p>}
+            <p className="errors">
+              {errors.age && <p style={{ color: "red" }}>{errors.age[0]}</p>}
+            </p>
           </div>
           <div>
             <label htmlFor="sex">Gender:</label>
@@ -77,7 +85,9 @@ export default function ContentUncontroledForm({
               <option value="Female">Female</option>
               <option value="I don't now">I don't now</option>
             </select>
-            {errors.sex && <p style={{ color: "red" }}>{errors.sex[0]}</p>}
+            <p className="errors">
+              {errors.sex && <p style={{ color: "red" }}>{errors.sex[0]}</p>}
+            </p>
           </div>
           <div>
             <label htmlFor="password">Password:</label>
@@ -87,9 +97,11 @@ export default function ContentUncontroledForm({
               name="password"
               defaultValue=""
             />
-            {errors.password && (
-              <p style={{ color: "red" }}>{errors.password[0]}</p>
-            )}
+            <p className="errors">
+              {errors.password && (
+                <p style={{ color: "red" }}>{errors.password[0]}</p>
+              )}
+            </p>
           </div>
           <div>
             <label htmlFor="passwordRepit">Confirm password:</label>
@@ -99,19 +111,29 @@ export default function ContentUncontroledForm({
               name="passwordRepit"
               defaultValue=""
             />
-            {errors.passwordRepit && (
-              <p style={{ color: "red" }}>{errors.passwordRepit[0]}</p>
-            )}
+            <p className="errors">
+              {errors.passwordRepit && (
+                <p style={{ color: "red" }}>{errors.passwordRepit[0]}</p>
+              )}
+            </p>
           </div>
           <div>
             <label htmlFor="terms">Terms:</label>
             <input type="checkbox" id="terms" name="terms" />
-            {errors.terms && <p style={{ color: "red" }}>{errors.terms[0]}</p>}
+            <p className="errors">
+              {errors.terms && (
+                <p style={{ color: "red" }}>{errors.terms[0]}</p>
+              )}
+            </p>
           </div>
           <div>
             <label htmlFor="image">Image:</label>
             <input type="text" id="image" name="image" defaultValue="" />
-            {errors.image && <p style={{ color: "red" }}>{errors.image[0]}</p>}
+            <p className="errors">
+              {errors.image && (
+                <p style={{ color: "red" }}>{errors.image[0]}</p>
+              )}
+            </p>
           </div>
 
           <div>
@@ -122,7 +144,9 @@ export default function ContentUncontroledForm({
                 <option key={c} value={c} />
               ))}
             </datalist>
-            {errors.country && <p className="errors">{errors.country[0]}</p>}
+            <p className="errors">
+              {errors.country && <p className="errors">{errors.country[0]}</p>}
+            </p>
           </div>
           <div>
             <button type="submit">Submit</button>
