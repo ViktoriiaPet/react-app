@@ -116,7 +116,7 @@ export default function ContentUncontroledForm({
 
           <div>
             <label htmlFor="country">Country</label>
-            <input list="countries" id="country" />
+            <input list="countries" id="country" name="country" />
             <datalist id="countries">
               {countries.map((c) => (
                 <option key={c} value={c} />

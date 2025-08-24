@@ -7,27 +7,29 @@ export const registrationSchema = z
       .min(1, "Enter the name")
       .regex(
         /^[A-ZА-ЯЁ][A-Za-zА-Яа-яЁё]*$/,
-        "Имя должно начинаться с заглавной буквы и содержать только буквы",
+        "The name must start with a capital letter and contain only letters.",
       ),
 
-    email: z.email("Введите корректный email"),
+    email: z.email("Enter the correct email address"),
 
     password: z
       .string()
-      .min(4, "Пароль должен быть не менее 4 символов")
+      .min(4, "The password must be at least 4 characters long.")
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])/,
-        "Пароль должен содержать заглавную букву, строчную, спецсивол и цифру",
+        "The password must contain an uppercase letter, a lowercase letter, a special character, and a number.",
       ),
-    passwordRepit: z.string().min(1, "Повторите пароль"),
+    passwordRepit: z.string().min(1, "Repeat the password"),
     age: z
       .number()
-      .min(0, "Возраст не может быть отрицательным")
-      .int("Возраст должен быть целым числом"),
-    image: z.base64().min(1, "Выберите изображение"),
-    terms: z.literal(true, { message: "Необходимо согласиться с условиями" }),
+      .min(0, "Age cannot be negative")
+      .int("Age must be an integer number."),
+    image: z.base64().min(1, "Select an image"),
+    terms: z.literal(true, {
+      message: "You must agree to the terms and conditions",
+    }),
     sex: z.enum(["Male", "Female", "I don't now"]),
-    country: z.string().min(1, "Выберите страну"),
+    country: z.string().min(1, "Select a country"),
   })
   .superRefine(({ passwordRepit, password }, ctx) => {
     if (passwordRepit !== password) {

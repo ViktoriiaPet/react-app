@@ -70,3 +70,11 @@ button:focus-visible {
   display: flex;
   flex-direction: row;
 }
+.errors {
+  min-height: 1.2em;
+  color: red;
+  font-size: 0.9rem;
+}
+.field-wrapper {
+  position: relative;
+}
