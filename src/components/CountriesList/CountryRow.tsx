@@ -16,12 +16,13 @@ const CountryRow = memo(({ name, country, selectedColumns }: Props) => {
   return (
     <div style={{ borderBottom: '1px solid #ddd', padding: '5px 0' }}>
       <div
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: 'pointer', display: 'flex', width:'100%', justifyContent:'space-between' }}
         onClick={() => setOpen((prev) => !prev)}
       >
-        <strong>{name}</strong>
-        {country.iso_code ? ` (${country.iso_code})` : ''} —{' '}
-        {latest?.population ? latest.population.toLocaleString() : 'N/A'}
+        <button><strong>{name}</strong></button>
+        {country.iso_code ? 
+        <div> {country.iso_code} </div>: '' }
+        {latest?.population ? <div> {latest.population.toLocaleString()} </div> : <div>'N/A'</div>}
       </div>
       {open && (
         <CountryTable yearlyData={country.data} selectedColumns={selectedColumns} />

@@ -5,7 +5,7 @@ type Props = {
   setSelectedColumns: (cols: string[]) => void
 }
 
-const AVAILABLE_COLUMNS = [
+const availableColumns = [
   'methane',
   'oil_co2',
   'temperature_change_from_co2',
@@ -52,7 +52,7 @@ export default function ColumnsModal({ selectedColumns, setSelectedColumns }: Pr
           >
             <h3>Please, select columns</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-              {AVAILABLE_COLUMNS.map((col) => (
+              {availableColumns.map((col) => (
                 <label key={col}>
                   <input
                     type="checkbox"
