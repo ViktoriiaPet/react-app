@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import CountriesList from './components/CountriesList/CountriesList'
 import ColumnsModal from './components/ColumnsModal/columnModal'
+import YearSelector from './components/Selectors/YearSelector'
 
 function App() {
   const [selectedColumns, setSelectedColumns] = useState<string[]>([])
+const [selectedYear, setSelectedYear] = useState<number>(2000)
 
   return (
     <div style={{ padding: '10px' }}>
@@ -13,8 +15,8 @@ function App() {
         selectedColumns={selectedColumns}
         setSelectedColumns={setSelectedColumns}
       />
-
-      <CountriesList selectedColumns={selectedColumns} />
+      <YearSelector selectedYear={selectedYear} onYearChange={setSelectedYear} />
+      <CountriesList selectedColumns={selectedColumns} selectedYear={selectedYear} />
     </div>
   )
 }

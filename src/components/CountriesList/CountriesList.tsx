@@ -4,9 +4,10 @@ import type { Co2Dataset } from '../../types/types'
 
 type Props = {
   selectedColumns: string[]
+  selectedYear: number
 }
 
-function CountriesList({ selectedColumns }: Props) {
+function CountriesList({ selectedColumns, selectedYear }: Props) {
   const data: Co2Dataset | null = useCo2Data()
 
   if (!data) return <p>Loading CO2 data...</p>
@@ -15,14 +16,21 @@ function CountriesList({ selectedColumns }: Props) {
 
   return (
     <div>
-      {countries.map((name) => (
-        <CountryRow
-          key={name}
-          name={name}
-          country={data[name]}
-          selectedColumns={selectedColumns}
-        />
-      ))}
+      {countries.map((name) => {
+        const country = data[name]
+
+        const yearData = country.data.find((d) => d.year === selectedYear)
+
+        return (
+          <CountryRow
+            key={name}
+            name={name}
+            country={country}
+            yearData={yearData}
+            selectedColumns={selectedColumns}
+          />
+        )
+      })}
     </div>
   )
 }
