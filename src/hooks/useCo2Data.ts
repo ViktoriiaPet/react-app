@@ -1,15 +1,23 @@
-import { useState, useEffect } from 'react'
-import type { Co2Dataset } from '../types/types'
+import type { Co2Dataset } from '../types/types';
 
-export function useCo2Data() {
-  const [data, setData] = useState<Co2Dataset | null>(null)
+let co2Promise: Promise<Co2Dataset> | null = null;
+let co2Cache: Co2Dataset | null = null;
 
-  useEffect(() => {
-    fetch('/owid-co2-data-trimmed.json')
+export function fetchCo2Data(): Co2Dataset {
+  if (co2Cache) return co2Cache;
+
+  if (!co2Promise) {
+    co2Promise = fetch('/owid-co2-data-trimmed.json')
       .then(res => res.json())
-      .then(json => setData(json))
-      .catch(err => console.error('Failed to load CO2 data', err))
-  }, [])
+      .then((json: Co2Dataset) => {
+        co2Cache = json;
+        return json;
+      });
+  }
 
-  return data
+  throw co2Promise;
+}
+
+export function useCo2Data(): Co2Dataset {
+  return fetchCo2Data();
 }
