@@ -67,9 +67,15 @@ button:focus-visible {
   }
 }
 @keyframes highlightFlash {
-  0%   { background-color: yellow; }
-  50%  { background-color: transparent; }
-  100% { background-color: yellow; }
+  0% {
+    background-color: yellow;
+  }
+  50% {
+    background-color: transparent;
+  }
+  100% {
+    background-color: yellow;
+  }
 }
 
 .highlight {

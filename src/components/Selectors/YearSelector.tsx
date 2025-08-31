@@ -1,10 +1,10 @@
 type Props = {
-  selectedYear: number
-  onYearChange: (year: number) => void
-}
+  selectedYear: number;
+  onYearChange: (year: number) => void;
+};
 
 export default function YearSelector({ selectedYear, onYearChange }: Props) {
-  const years = Array.from({ length: 2020 - 1750 + 1 }, (_, i) => 1750 + i)
+  const years = Array.from({ length: 2020 - 1750 + 1 }, (_, i) => 1750 + i);
 
   return (
     <div className="flex items-center gap-2 mb-4">
@@ -21,5 +21,5 @@ export default function YearSelector({ selectedYear, onYearChange }: Props) {
         ))}
       </select>
     </div>
-  )
+  );
 }
