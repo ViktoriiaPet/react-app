@@ -1,0 +1,6 @@
+public/owid-co2-data.json
+public/owid-co2-data-trimmed.json
+
+node_modules
+dist
+build
